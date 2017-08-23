@@ -2,14 +2,14 @@ function redMonster(id){
   this.id = id
   this.x = floor(random(3,12))*w
   this.y = floor(random(3,12))*w
-  this.angle = floor(random(1,180))+120
+  this.angle = floor(random(1,180))
   this.radius = 10
   this.collide = function(){
 
     for (var i = 0; i<grid.length; i++){
       for (var j = 0; j<grid[i].length; j++){
         if(grid[i][j].on && this.squareCollide(i,j)){
-          this.angle += -1
+          this.angle += +2
         }
         if(grid[i][j].takeRoute && this.squareCollide(i,j)){
             die()
@@ -22,7 +22,7 @@ function redMonster(id){
   for (var i = 0; i<reds.length; i++){
         if(dist(this.x, this.y, reds[i].x, reds[i].y)<this.radius*2 && reds[i].id+1 !== this.id+1){
           reds[i].angle += -1
-          this.angle += -1
+          // this.angle += -1
       }
     }
   }
@@ -36,6 +36,7 @@ function redMonster(id){
 
 
   this.walk = function(){
+    console.log(Math.sin(reds[1].angle))
     this.x -= Math.sin(this.angle)*2
     this.y += Math.cos(this.angle)*2
 
@@ -59,3 +60,9 @@ redMonster.prototype.squareCollide = function(i,j){
   return (dx*dx+dy*dy<=(this.radius*this.radius));
 
 }
+
+// function keyPressed(){
+//   for (var j = 0; j<reds.length; j++){
+//     reds[j].angle+=Math.PI
+//   }
+// }
