@@ -10,7 +10,7 @@ function Cell(x,y){
   this.on2 = false
   this.takeRoute = false
 
-  this.floodCounted = false
+  this.hasFlooded = false
 
 
 }
@@ -49,44 +49,52 @@ function startSquare(){
     }
   }
 
+
+
       // grid[4][0].on = true;
       // grid[4][2].on = true;
       //
 
-/*
-  for (var i = 0; i<grid.length/2; i++){
-    for (var j = 0; j<grid[i].length/2; j++){
 
-      grid[i][0].on = true;
-      grid[i][cols/2-1].on = true;
-      grid[rows/2-1][j].on = true;
-      grid[0][j].on = true;
+  // for (var i = 0; i<grid.length/2; i++){
+  //   for (var j = 0; j<grid[i].length/2; j++){
+  //
+  //     grid[i][0].on = true;
+  //     grid[i][cols/2-1].on = true;
+  //     grid[rows/2-1][j].on = true;
+  //     grid[0][j].on = true;
+  //
+  //   }
+  // }
+  // grid[1][1].floodFill()
 
-    }
-  }
-  grid[0][19].on2=true;*/
 }
 
 var floodArr =[];
 
-Cell.prototype.floodFill = function(A,B){
-  if(this.on === false && this.floodCounted === false){
-    this.floodCounted = true;
+Cell.prototype.floodFill = function(){
+
+  if(this.on === false && this.hasFlooded === false){
+    this.hasFlooded = true;
+    // this.on2 = true;
     floodArr.push(this.i)
     for (var xoff = -1; xoff<=1; xoff++){
       for (var yoff = -1; yoff<=1; yoff++){
-          grid[this.i[0]-xoff][this.i[1]-yoff].floodFill()
+        grid[this.i[0]-xoff][this.i[1]-yoff].floodFill()
+          // grid[this.i[0]-xoff][this.i[1]-yoff].on2 = true
+
       }
     }
+    return floodArr;
+
   }
-  return floodArr;
 }
 
 function floodReset(){
   floodArr =[];
   for (var i = 0; i<grid.length; i++){
     for (var j = 0; j<grid[i].length; j++){
-      grid[i][j].floodCounted = false
+      grid[i][j].hasFlooded = false
     }
   }
 }
@@ -101,47 +109,70 @@ function checkFlood(){
 }
 
 function checkFlood(){
-  var takeArrX
-  var takeArrY
+  var takeArrX, takeArrY, potFloodUp, potFloodDown, potFloodLeft, potFloodRight
+  var getFlood  = []
+
   for (var k = 0; k<takeArr.length;k++){
     takeArrX = takeArr[k][0]
     takeArrY = takeArr[k][1]
-    if(!grid[takeArrX][takeArrY+1].on && !grid[takeArrX][takeArrY-1].on){
-      checkA = grid[takeArrX][takeArrY+1].floodFill()
+    potFloodDown = grid[takeArrX][takeArrY+1]
+    potFloodUp = grid[takeArrX][takeArrY-1]
+    potFloodRight = grid[takeArrX-1][takeArrY]
+    potFloodLeft = grid[takeArrX+1][takeArrY]
 
-      floodReset()
-      checkB = grid[takeArrX][takeArrY-1].floodFill()
-      floodReset()
-      console.log(checkB)
 
-      if(checkA.length<checkB.length){
-        for (var l = 0; l<checkA.length;l++){
-          grid[checkA[l][0]][checkA[l][1]].on=true
-        }
-      }else {
-        for (var l = 0; l<checkB.length;l++){
-          grid[checkB[l][0]][checkB[l][1]].on=true
+    checkFloodDir(potFloodDown)
+    checkFloodDir(potFloodUp)
+    checkFloodDir(potFloodRight)
+    checkFloodDir(potFloodLeft)
+
+  }
+
+  checkArrForMonster(getFlood)
+
+  floodReset()
+
+  function checkFloodDir(dir){
+    // console.log(dir)
+    if(!dir.on && !dir.hasFlooded && !dir.takeRoute){
+      getFlood.push(grid[dir.i[0]][dir.i[1]].floodFill())
+      floodArr = []
+    }
+
+  }
+
+  function checkArrForMonster(arr){
+    let currentX
+    let currentY
+    let currentCell
+    let currentSpace
+    let foundMoster
+    for (var i = 0; i<arr.length; i++){
+      currentSpace = arr[i]
+      foundMoster= false
+
+      for (var ii = 0; ii<currentSpace.length; ii++){
+        currentX = currentSpace[ii][0]
+        currentY = currentSpace[ii][1]
+        currentCell = grid[currentX][currentY]
+
+        for (var iii = 0; iii<reds.length; iii++){
+          if (dist(currentCell.x,currentCell.y, reds[iii].x, reds[iii].y) < w){
+            foundMoster = true
+          }
         }
       }
-    break
-
-    }else if(!grid[takeArrX+1][takeArrY].on && !grid[takeArrX-1][takeArrY].on){
-      checkA = grid[takeArrX+1][takeArrY].floodFill()
-      floodReset()
-      checkB = grid[takeArrX-1][takeArrY].floodFill()
-      floodReset()
-      console.log("hej")
-
-      if(checkA.length<checkB.length){
-        for (var l = 0; l<checkA.length;l++){
-          grid[checkA[l][0]][checkA[l][1]].on=true
-        }
+      if (foundMoster) {
+        //DO NOTHING
       }else {
-        for (var l = 0; l<checkB.length;l++){
-          grid[checkB[l][0]][checkB[l][1]].on=true
+        for (var ii = 0; ii<currentSpace.length; ii++){
+          currentX = currentSpace[ii][0]
+          currentY = currentSpace[ii][1]
+          currentCell = grid[currentX][currentY]
+          currentCell.on = true
         }
       }
-      break
+
     }
   }
 }

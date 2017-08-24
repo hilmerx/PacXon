@@ -12,7 +12,10 @@ function redMonster(id){
           this.angle += +2
         }
         if(grid[i][j].takeRoute && this.squareCollide(i,j)){
-            die()
+
+
+          die()
+
         }
       }
     }

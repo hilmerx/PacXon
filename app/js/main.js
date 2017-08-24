@@ -85,19 +85,20 @@ function die(){
   pacman.y=w/2
   pacman.aniX=w/2
   pacman.aniY=w/2
+  pacman.prevX=w/2
+  pacman.prevY=w/2
+
     takeArr=[]
     pacman.direction=""
 
     for (var i = 0; i<grid.length; i++){
       for (var j = 0; j<grid[i].length; j++){
-        // console.log("hjec")
-      grid[i][j].takeRoute = false;
-      grid[i][j].on = false;
-      startSquare()
-
-
+      grid[i][j].takeRoute = false
+      grid[i][j].on = false
     }
   }
+  startSquare()
+
 
 }
 

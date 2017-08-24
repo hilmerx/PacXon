@@ -114,7 +114,6 @@ Pac.prototype.take = function(){
 
     if (takeArr[i][0] === (pacman.x-w/2) /w && takeArr[i][1] === (pacman.y-w/2) /w){
       die()
-      return
     }
   }
 }
