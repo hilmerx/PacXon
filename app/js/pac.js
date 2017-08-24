@@ -8,23 +8,33 @@ function Pac(){
   this.takeRoute = false
   this.flying = false
   this.aniSpeed = 4
+  this.prevX = w/2
+  this.prevY = w/2
 
   this.move = function(input) {
       switch (this.direction) {
         case 'down': if(this.y<380 && this.aniY % this.y === 0 && this.aniX % this.x === 0){
-
+          this.prevX = this.x
+          this.prevY = this.y
           this.y = this.y + w;
+
         }
           break;
         case 'up': if(this.y>w/2 && this.aniY % this.y === 0 && this.aniX % this.x === 0){
+          this.prevX = this.x
+          this.prevY = this.y
           this.y = this.y - w;
         }
           break;
         case 'right': if (this.x<380 && this.aniX % this.x === 0 && this.aniY % this.y === 0) {
+          this.prevY = this.y
+          this.prevX = this.x
           this.x = this.x + w;
         }
           break;
         case 'left': if(this.x>w/2 && this.aniX % this.x === 0 && this.aniY % this.y === 0){
+          this.prevY = this.y
+          this.prevX = this.x
           this.x = this.x - w;
         }
           break;
@@ -63,12 +73,14 @@ var takeArr = []
 Pac.prototype.take = function(){
     for (var i = 0; i<cols;i++){
       for (var j = 0; j<rows;j++){
-        if(pacman.x-w/2 === grid[i][j].x && pacman.y-w/2 === grid[i][j].y && grid[i][j].on === false && grid[i][j].takeRoute === false){
-          console.log("take")
+        if(pacman.x-w/2 === grid[i][j].x && pacman.y-w/2 === grid[i][j].y && grid[i][j].on === false){
+          pacman.flying = true;
+        }
 
+
+        if(pacman.prevX-w/2 === grid[i][j].x && pacman.prevY-w/2 === grid[i][j].y && grid[i][j].on === false && grid[i][j].takeRoute === false){
           grid[i][j].takeRoute = true
           takeArr.push([i,j]);
-          pacman.flying = true;
       }
     }
   }
@@ -101,7 +113,6 @@ Pac.prototype.take = function(){
   for (var i = 0; i<takeArr.length-1;i++){
 
     if (takeArr[i][0] === (pacman.x-w/2) /w && takeArr[i][1] === (pacman.y-w/2) /w){
-      console.log("DIE")
       die()
       return
     }

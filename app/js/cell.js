@@ -111,7 +111,6 @@ function checkFlood(){
       floodReset()
       checkB = grid[takeArrX][takeArrY-1].floodFill()
       floodReset()
-      console.log(checkA)
       if(checkA.length<checkB.length){
         for (var l = 0; l<checkA.length;l++){
           grid[checkA[l][0]][checkA[l][1]].on=true

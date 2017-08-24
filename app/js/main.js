@@ -15,7 +15,7 @@ var cols = 20
 var w = 20
 var speed = 6
 var speedCounter = 0
-var redMonsters = 0
+var redMonsters = 2
 var allSquares = 0
 
 
@@ -30,11 +30,11 @@ function setup(){
 
   grid = Make2DArray(rows, cols)
 
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
-      grid[i][j] = new Cell(i,j)
+    for (var i = 0; i<grid.length; i++){
+      for (var j = 0; j<grid[i].length; j++){
+        grid[i][j] = new Cell(i,j)
+      }
     }
-  }
 
   allSquares = (rows-2)*(cols-2)
 
@@ -85,11 +85,12 @@ function die(){
   pacman.y=w/2
   pacman.aniX=w/2
   pacman.aniY=w/2
-  takeArr=[]
-  pacman.direction=""
+    takeArr=[]
+    pacman.direction=""
 
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
+    for (var i = 0; i<grid.length; i++){
+      for (var j = 0; j<grid[i].length; j++){
+        // console.log("hjec")
       grid[i][j].takeRoute = false;
       grid[i][j].on = false;
       startSquare()
