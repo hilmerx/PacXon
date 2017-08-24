@@ -8,12 +8,13 @@ function Cell(x,y){
   this.i = [x,y]
   this.on = false
   this.on2 = false
+  this.takeRoute = false
 
   this.floodCounted = false
 
 
 }
-   
+
 Cell.prototype.show = function(){
   if(this.on2){
     noStroke()

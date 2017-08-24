@@ -1,29 +1,58 @@
 function Pac(){
-  this.x = 0
-  this.y = 0
+  this.x = w/2
+  this.y = w/2
+  this.aniX = w/2
+  this.aniY = w/2
   this.alive = true
   this.direction = ""
   this.takeRoute = false
   this.flying = false
+  this.aniSpeed = 4
 
   this.move = function(input) {
       switch (this.direction) {
-        case 'down': if(this.y<380){this.y = this.y + w;}
+        case 'down': if(this.y<380 && this.aniY % this.y === 0 && this.aniX % this.x === 0){
+
+          this.y = this.y + w;
+        }
           break;
-        case 'up': if(this.y>0){this.y = this.y - w;}
+        case 'up': if(this.y>w/2 && this.aniY % this.y === 0 && this.aniX % this.x === 0){
+          this.y = this.y - w;
+        }
           break;
-        case 'right': if(this.x<380){this.x = this.x + w;}
+        case 'right': if (this.x<380 && this.aniX % this.x === 0 && this.aniY % this.y === 0) {
+          this.x = this.x + w;
+        }
           break;
-        case 'left': if(this.x>0){this.x = this.x - w;}
+        case 'left': if(this.x>w/2 && this.aniX % this.x === 0 && this.aniY % this.y === 0){
+          this.x = this.x - w;
+        }
           break;
       }
+  }
+  this.moveAni = function(input) {
+
+    if (this.direction === "down" && this.aniY<380 && this.y > this.aniY || this.y > this.aniY){
+      this.aniY = this.aniY + this.aniSpeed
+    }
+    else if (this.direction === "up" && this.y>w/2 && this.y < this.aniY || this.y < this.aniY){
+      this.aniY = this.aniY - this.aniSpeed
+    }
+    else if (this.direction === "right" && this.aniX<380 && this.x > this.aniX || this.x > this.aniX){
+      this.aniX = this.aniX + this.aniSpeed
+    }
+    else if (this.direction === "left" && this.aniX>w/2 && this.x < this.aniX || this.x < this.aniX){
+      this.aniX = this.aniX - this.aniSpeed
+    }
+
   }
 }
 
 Pac.prototype.show = function(){
   fill(255,255,0)
-  ellipseMode(CORNER);
-  ellipse(this.x, this.y, 20, 20)
+  ellipseMode(CENTER);
+  ellipse(this.aniX, this.aniY, 20, 20)
+  // ellipse(this.x, this.y, 5, 5)
 }
 
 
@@ -34,7 +63,9 @@ var takeArr = []
 Pac.prototype.take = function(){
     for (var i = 0; i<cols;i++){
       for (var j = 0; j<rows;j++){
-        if(pacman.x === grid[i][j].x && pacman.y === grid[i][j].y && grid[i][j].on === false){
+        if(pacman.x-w/2 === grid[i][j].x && pacman.y-w/2 === grid[i][j].y && grid[i][j].on === false && grid[i][j].takeRoute === false){
+          console.log("take")
+
           grid[i][j].takeRoute = true
           takeArr.push([i,j]);
           pacman.flying = true;
@@ -44,12 +75,13 @@ Pac.prototype.take = function(){
 
   for (var i = 0; i<cols;i++){
     for (var j = 0; j<rows;j++){
-      if(pacman.x === grid[i][j].x && pacman.y === grid[i][j].y && grid[i][j].on === true && pacman.flying){
+      if(pacman.x-w/2 === grid[i][j].x && pacman.y-w/2 === grid[i][j].y && grid[i][j].on === true && pacman.flying){
 
-        //make line ON
+      //make line ON
       for (var k = 0; k<takeArr.length;k++){
         grid[takeArr[k][0]][takeArr[k][1]].on = true
       }
+
       //search for floodFill-prospects
       checkFlood()
       takeArr=[];
@@ -65,8 +97,11 @@ Pac.prototype.take = function(){
 
 
   //check if collides with tail
+
   for (var i = 0; i<takeArr.length-1;i++){
-    if (takeArr[i][0] === pacman.x/w && takeArr[i][1] === pacman.y/w){
+
+    if (takeArr[i][0] === (pacman.x-w/2) /w && takeArr[i][1] === (pacman.y-w/2) /w){
+      console.log("DIE")
       die()
       return
     }
@@ -79,7 +114,7 @@ function keyPressed(){
   if (keyCode===RIGHT_ARROW){
     if(pacman.flying && pacman.direction==="left"){
 
-    }else{
+    }else {
       keyIsPressed=true;
       pacman.direction="right"
     }

@@ -10,13 +10,13 @@
 }
 
 
-var rows=20
-var cols=20
-var w=20
-var speed=2
-var speedCounter=0;
-var redMonsters = 3
-var allSquares=0
+var rows = 20
+var cols = 20
+var w = 20
+var speed = 6
+var speedCounter = 0
+var redMonsters = 0
+var allSquares = 0
 
 
 var grid
@@ -24,7 +24,7 @@ var pacman;
 var reds = []
 
 function setup(){
-  frameRate(20);
+  // frameRate(5)
   createCanvas(401,401,)
 
 
@@ -66,13 +66,10 @@ function draw(){
     reds[i].walk()
   }
 
-  if(speedCounter===speed){
-    pacman.move()
-    pacman.take()
+  pacman.move()
+  pacman.moveAni()
+  pacman.take()
 
-    speedCounter=0
-  }
-  speedCounter++
 
   text(calcPercent(), 10,10)
 
@@ -84,8 +81,10 @@ function draw(){
 
 
 function die(){
-  pacman.x=0
-  pacman.y=0
+  pacman.x=w/2
+  pacman.y=w/2
+  pacman.aniX=w/2
+  pacman.aniY=w/2
   takeArr=[]
   pacman.direction=""
 

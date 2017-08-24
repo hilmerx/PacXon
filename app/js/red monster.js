@@ -36,7 +36,7 @@ function redMonster(id){
 
 
   this.walk = function(){
-    console.log(Math.sin(reds[1].angle))
+    // console.log(Math.sin(reds[1].angle))
     this.x -= Math.sin(this.angle)*2
     this.y += Math.cos(this.angle)*2
 
