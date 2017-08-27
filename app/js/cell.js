@@ -1,3 +1,43 @@
+function CellTEST(x,y){
+  this.x = 230;
+  this.y = 230;
+  this.x2 = this.x+w/2
+  this.y2 = this.y+w/2
+  this.i = [x,y]
+  this.on = true
+  this.on2 = false
+  this.takeRoute = false
+
+  this.hasFlooded = false
+
+  this.lines = [
+                {x1:this.x,y1: this.y,x2: this.x+w,y2: this.y+1},
+                {x1:this.x+w,y1: this.y,x2: this.x+w, y2: this.y+w},
+                {x1:this.x+w-150,y1: this.y,x2: this.x+w-151, y2: this.y+w+100},
+                {x1:this.x+w-200,y1: this.y+w,x2: this.x,y2: this.y+w},
+                // {x1:this.x,y1: this.y+w,x2: this.x,y2: this.y}
+              ]
+
+  this.showLine = function(){
+    // console.log(line.x1, line.y1, line.x2, line.y2)
+    let line
+    for (var i = 0; i<this.lines.length; i++){
+      line = this.lines[i]
+      if(this.on){
+        // noStroke()
+        fill(100,0,0)
+        stroke(255,0,255)
+        fill(255,120,120)
+
+        reds[0].lineShow(line.x1, line.y1, line.x2, line.y2)
+        // line(line.x1, line.y1, line.x2, line.y2)
+        // point(line.x2, line.y2)
+        // point(line.x1, line.y1)
+
+      }
+    }
+  }
+}
 
 
 function Cell(x,y){
@@ -18,6 +58,26 @@ function Cell(x,y){
                 {x1:this.x+w,y1: this.y+w,x2: this.x,y2: this.y+w},
                 {x1:this.x,y1: this.y+w,x2: this.x,y2: this.y}
               ]
+
+  this.showLine = function(){
+    let line
+    for (var i = 0; i<this.lines.length; i++){
+      line = this.lines[i]
+      if(this.on){
+        // noStroke()
+        fill(100,0,0)
+        stroke(255,0,255)
+        fill(255,120,120)
+
+        reds[0].lineShow(line.x1, line.y1, line.x2, line.y2)
+        // line(line.x1, line.y1, line.x2, line.y2)
+        // point(line.x2, line.y2)
+        // point(line.x1, line.y1)
+
+      }
+    }
+  }
+
 
 
 }
@@ -43,6 +103,7 @@ Cell.prototype.show = function(){
   rect(this.x, this.y, 20, 20)
 
 }
+
 
 function startSquare(){
   for (var i = 0; i<grid.length; i++){
@@ -164,7 +225,7 @@ function checkFlood(){
         currentCell = grid[currentX][currentY]
 
         for (var iii = 0; iii<reds.length; iii++){
-          if (dist(currentCell.x,currentCell.y, reds[iii].x, reds[iii].y) < w){
+          if (dist(currentCell.x,currentCell.y, reds[iii].location.x, reds[iii].location.y) < w){
             foundMoster = true
           }
         }

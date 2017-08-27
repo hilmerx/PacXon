@@ -1,44 +1,24 @@
 function redMonster(id){
   this.id = id
-  this.location = new p5.Vector(240, 240);
+  this.location = new p5.Vector(200 - id*w , 350 - id*w);
   // this.x = 250
   // this.y = 250
   this.d = 20
-  this.x = 240
-  this.y = 240
+  // this.x = 230
+  // this.y = 230
 
   // this.angle = 3*PI/2
-  this.angle = PI
+  this.angle = Math.random()*322 * (Math.PI / 180);
+  // this.angle = PI
 
   this.v = new p5.Vector(0,1);
-  this.speed = 1
+  this.origSpeed = 5
+  this.speed = this.origSpeed
   this.radius = 10
-  this.collide = function(){
 
-    for (var i = 0; i<grid.length; i++){
-      for (var j = 0; j<grid[i].length; j++){
-        if(grid[i][j].on && this.squareCollide(i,j)){
-          // console.log(this.angle)
-          this.angle += PI
-        }
-        if(grid[i][j].takeRoute && this.squareCollide(i,j)){
-          die()
-
-        }
-      }
-    }
-
-
-
-  for (var i = 0; i<reds.length; i++){
-        if(dist(this.x, this.y, reds[i].x, reds[i].y)<this.radius*2 && reds[i].id+1 !== this.id+1){
-          reds[i].angle += -1
-          // this.angle += -1
-      }
-    }
-  }
-
-  this.bounce = function (line){
+  
+  this.bounce = function (i, j, line){
+    console.log(i,j,line)
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
     let linePerpVector = new p5.Vector(1,linePerpSlope)
@@ -48,45 +28,40 @@ function redMonster(id){
     let linePerpRad = Math.atan(linePerpSlope, 1)
 
     let linePerpDeg = (linePerpRad * (180 / PI) *-1) + 180
-    // console.log(linePerpDeg) // In radians
-    console.log(thisAngleDeg)
-    console.log(linePerpDeg)
-    let newAngleDiff = (thisAngleDeg - linePerpDeg)
-    console.log(newAngleDiff)
+    // console.log(linePerpDeg)
+    // console.log(thisAngleDeg)
+    let newAngleDiff = (thisAngleDeg - linePerpDeg)*2
+    // console.log(newAngleDiff)
+    // console.log(thisAngleDeg - newAngleDiff)*2
     let newAngle = (thisAngleDeg - newAngleDiff)+180
 
     console.log(newAngle)
 
-    let newAngleRad = newAngle * (Math.PI / 180);
+    let newAngleRad = newAngle * (Math.PI / 180)
+    console.log(newAngleRad)
 
     // console.log(newAngle)
 
-    this.angle = newAngleRad;
-
-
-
-
+    this.angle = newAngleRad+0.02;
+    this.speed = this.speed +3;
   }
 
-  this.collide1 = function(){
+  this.collideWithLine = function(){
     for (var i = 0; i<grid.length; i++){
       for (var j = 0; j<grid[i].length; j++){
-        if(grid[i][j].on && this.squareCollide(i,j)){
-          redMonsterColor = color(120,200,0)
-          text("hej", 50,50)
-        } else {
-          redMonsterColor = color(255,0,0)
+
+        if(grid[i][j].on){
+          // console.log(grid[i][j])
+          collidingLine =this.lineCollideCheck(grid[i][j])
+          if (collidingLine) {
+            redMonsterColor = color(120,200,0)
+            this.bounce(i, j, collidingLine);
+            return
+          } else {
+            redMonsterColor = color(255,0,0)
+          }
         }
       }
-    }
-  }
-  this.collideWithLine = function(){
-    collidingLine =this.lineCollideCheck()
-    if (collidingLine) {
-      redMonsterColor = color(120,200,0)
-      this.bounce(collidingLine);
-    } else {
-      redMonsterColor = color(255,0,0)
     }
   }
 
@@ -110,12 +85,12 @@ function redMonster(id){
 
   this.walk = function(){
     // console.log(Math.sin(reds[1].angle))
-    this.location.x += Math.cos(this.angle)*this.speed
     this.location.y -= Math.sin(this.angle)*this.speed
+    this.location.x += Math.cos(this.angle)*this.speed
     // this.location.add(this.v)
-
-    // this.x = mouseX
-    // this.y = mouseY
+    this.speed = this.origSpeed
+    // this.location.x = mouseX
+    // this.location.y = mouseY
 
 
 
@@ -140,62 +115,102 @@ redMonster.prototype.squareCollide = function(i,j){
 
 }
 
+let result
+redMonster.prototype.lineCollideCheck = function(obj){
 
-redMonster.prototype.lineCollideCheck = function(i,j){
 
-  let result = false
+  let lines = obj.lines
+  let lineLength
+  let line
+  let lineSlope
+  let objSlope
+  let lineOff
+  let objOff
+  let newX
+  let newY
+  let hor
+  let v
+  let m
+  let m2
+  let dotProduct1
+  let dotProduct2
+  let withinBoundries
+  let point
+  let endPointCollides
+  let isOnInfLine
 
-  this.x = this.location.x
-  this.y = this.location.y
-
-  // console.log(lines)
+  // this.x = this.location.x
+  // this.y = this.location.y
 
   for (var i = 0; i < lines.length; i++){
 
-    let line = lines[i]
-
-    let lineLength = dist(line.x1,line.y1,line.x2,line.y2)
-
-    let lineSlope = ((line.y1-line.y2)/(line.x1-line.x2))
-    let objSlope = -1/lineSlope
-
-    let lineOff = line.y1-line.x1*lineSlope
-    let objOff = this.y-this.x*objSlope
-
-    let newX = (objOff-lineOff) / (lineSlope-objSlope)
-    let newY = newX*objSlope+objOff
+    l = lines[i]
 
 
-    let hor = {x: dist(line.x1, line.y1, line.x2, line.x1), y: 0}
-    let v = {x: line.x2-line.x1, y: line.y2-line.y1 }
-    let m = {x: this.x-line.x1, y: this.y-line.y1}
-    let m2 = {x: this.x-line.x2, y: this.y-line.y2}
+    // console.log( line)
+
+    lineLength = dist(l.x1,l.y1,l.x2,l.y2)
+
+    if (l.x1 === l.x2){
+      lineSlope = 0
+    } else {
+      lineSlope = ((l.y2-l.y1)/(l.x2-l.x1))
+    }
+
+
+    if (lineSlope === 0){
+      objSlope = 0
+    } else {
+      objSlope = -1/lineSlope
+    }
+
+
+    lineOff = l.y1-l.x1*lineSlope
+    objOff = this.location.y-this.location.x*objSlope
+
+    if (l.x1 == l.x2){
+      newX = l.x1
+      newY = this.location.y
+
+    } else if (l.y1 == l.y2) {
+      newY = l.y1
+      newX = this.location.x
+
+    } else {
+      newX = (objOff-lineOff) / (lineSlope-objSlope)
+      newY = newX*objSlope+objOff
+    }
+
+    hor = {x: dist(l.x1, l.y1, l.x2, l.x1), y: 0}
+    v = {x: l.x2-l.x1, y: l.y2-l.y1 }
+    m = {x: this.location.x-l.x1, y: this.location.y-l.y1}
+    m2 = {x: this.location.x-l.x2, y: this.location.y-l.y2}
 
     // let dotProduct1 = hor.x*m.x+hor.y*m.y
     // let dotProduct2 = hor.x*m2.x+hor.y*m2.y
-    let dotProduct1 = v.x*m.x+v.y*m.y
-    let dotProduct2 = v.x*m2.x+v.y*m2.y
+    dotProduct1 = v.x*m.x+v.y*m.y
+    dotProduct2 = v.x*m2.x+v.y*m2.y
 
 
-    let withinBoundries = (dotProduct1>0 && dotProduct2<0)
 
-    let point
-    if (dist(line.x1,line.y1, this.x,this.y) < dist(line.x2,line.y2, this.x,this.y)){
-      point = {x:line.x1, y: line.y1}
+    withinBoundries = (dotProduct1>0 && dotProduct2<0)
+
+
+    if (dist(l.x1,l.y1, this.location.x,this.location.y) < dist(l.x2,l.y2, this.location.x,this.location.y)){
+      point = {x:l.x1, y: l.y1}
     } else {
-      point = {x:line.x2, y: line.y2}
+      point = {x:l.x2, y: l.y2}
     }
 
-    let endPointCollides = dist(this.x, this.y, point.x, point.y)<this.d/2
-    let isOnInfLine = dist(this.x, this.y, newX, newY)<= this.d/2
+    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.d/2-2
+    isOnInfLine = dist(this.location.x, this.location.y, newX, newY)<= this.d/2
 
-    if (isOnInfLine && withinBoundries || endPointCollides){
+    if (isOnInfLine && withinBoundries /*|| endPointCollides*/){
 
-      return line
+      return l
 
     } else {
       //DO NOTHING
     }
   }
-
 }

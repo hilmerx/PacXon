@@ -12,14 +12,17 @@
 
 var rows = 20
 var cols = 20
+var rows2 = 1
+var cols2 = 1
 var w = 20
 var speed = 6
 var speedCounter = 0
-var redMonsters = 1
+var redMonsters = 4
 var allSquares = 0
 var redMonsterColor
 var pxPurple
 var grid
+var gridTEST
 var pacman;
 var reds = []
 var lines = []
@@ -33,6 +36,7 @@ function setup(){
 
 
   grid = Make2DArray(rows, cols)
+  gridTEST = Make2DArray(rows2, cols2)
 
     for (var i = 0; i<grid.length; i++){
       for (var j = 0; j<grid[i].length; j++){
@@ -40,8 +44,12 @@ function setup(){
       }
     }
 
+
+    gridTEST[0][0] = new CellTEST(0,0)
+
     lines[0] = new Line(200,300,300,320)
     lines[1] = new Line(100,300,120,220)
+
 
   allSquares = (rows-2)*(cols-2)
 
@@ -65,8 +73,9 @@ function draw(){
       grid[i][j].show();
     }
   }
+
   for (var j = 0; j<lines.length; j++){
-    lines[j].show();
+    // lines[j].show();
     // console.log(j)
   }
 
@@ -74,8 +83,8 @@ function draw(){
 
   for (var i = 0; i<redMonsters; i++){
     reds[i].show()
-    // reds[i].collide()
-    reds[i].collide1()
+    reds[i].collide()
+    // reds[i].collide1()
     reds[i].collideWithLine()
 
     // console.log('REDS[I].COLLIDE()', reds[i].collide())
@@ -85,6 +94,24 @@ function draw(){
   pacman.move()
   pacman.moveAni()
   pacman.take()
+  // for (var i = 0; i<gridTEST.length; i++){
+  //   for (var j = 0; j<gridTEST[i].length; j++){
+  //     // grid[i][j].showLine()
+  //     gridTEST[i][j].showLine()
+  //
+  //
+  //   }
+  // }
+
+
+  for (var i = 0; i<grid.length; i++){
+    for (var j = 0; j<grid[i].length; j++){
+      // grid[i][j].showLine()
+
+
+    }
+  }
+
 
 
   text(calcPercent(), 10,10)
