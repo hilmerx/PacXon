@@ -26,6 +26,7 @@ var lines = []
 
 function setup(){
   // frameRate(5)
+
   createCanvas(401,401,)
    redMonsterColor = color(255,0,0)
    pxPurple = color(255,0,255)
@@ -39,10 +40,8 @@ function setup(){
       }
     }
 
-    // lines[0] = new Line(200,300,300,300)
-    lines[0] = new Line(200,300,300,320)
-    lines[1] = new Line(100,300,120,220)
-  // lines[0] = new Line(100,100,100,200)
+    // lines[0] = new Line(200,300,300,320)
+    // lines[1] = new Line(100,300,120,220)
 
   allSquares = (rows-2)*(cols-2)
 
@@ -53,6 +52,7 @@ function setup(){
   }
 
   startSquare()
+
 }
 
 

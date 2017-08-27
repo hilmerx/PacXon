@@ -7,9 +7,11 @@ function redMonster(id){
   this.x = 240
   this.y = 240
 
+  // this.angle = 3*PI/2
   this.angle = PI
 
-  this.speed = new p5.Vector(0,1);
+  this.v = new p5.Vector(0,1);
+  this.speed = 1
   this.radius = 10
   this.collide = function(){
 
@@ -36,8 +38,34 @@ function redMonster(id){
     }
   }
 
-  this.bounce = function (){
-    
+  this.bounce = function (line){
+    let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
+    let linePerpSlope = -1/lineSlope
+    let linePerpVector = new p5.Vector(1,linePerpSlope)
+
+
+    let thisAngleDeg = this.angle* (180 / PI);
+    let linePerpRad = Math.atan(linePerpSlope, 1)
+
+    let linePerpDeg = (linePerpRad * (180 / PI) *-1) + 180
+    // console.log(linePerpDeg) // In radians
+    console.log(thisAngleDeg)
+    console.log(linePerpDeg)
+    let newAngleDiff = (thisAngleDeg - linePerpDeg)
+    console.log(newAngleDiff)
+    let newAngle = (thisAngleDeg - newAngleDiff)+180
+
+    console.log(newAngle)
+
+    let newAngleRad = newAngle * (Math.PI / 180);
+
+    // console.log(newAngle)
+
+    this.angle = newAngleRad;
+
+
+
+
   }
 
   this.collide1 = function(){
@@ -53,9 +81,10 @@ function redMonster(id){
     }
   }
   this.collideWithLine = function(){
-    if (this.lineCollideCheck()) {
+    collidingLine =this.lineCollideCheck()
+    if (collidingLine) {
       redMonsterColor = color(120,200,0)
-      this.bounce();
+      this.bounce(collidingLine);
     } else {
       redMonsterColor = color(255,0,0)
     }
@@ -81,9 +110,9 @@ function redMonster(id){
 
   this.walk = function(){
     // console.log(Math.sin(reds[1].angle))
-    // this.x -= Math.sin(this.angle)*this.speed
-    // this.y += Math.cos(this.angle)*this.speed
-    this.location.add(this.speed)
+    this.location.x += Math.cos(this.angle)*this.speed
+    this.location.y -= Math.sin(this.angle)*this.speed
+    // this.location.add(this.v)
 
     // this.x = mouseX
     // this.y = mouseY
@@ -156,12 +185,11 @@ redMonster.prototype.lineCollideCheck = function(i,j){
     }
 
     let endPointCollides = dist(this.x, this.y, point.x, point.y)<this.d/2
-    // console.log(endPointCollides)
     let isOnInfLine = dist(this.x, this.y, newX, newY)<= this.d/2
 
     if (isOnInfLine && withinBoundries || endPointCollides){
 
-      return true
+      return line
 
     } else {
       //DO NOTHING
