@@ -84,10 +84,7 @@ function draw(){
   for (var i = 0; i<redMonsters; i++){
     reds[i].show()
     reds[i].collide()
-    // reds[i].collide1()
     reds[i].collideWithLine()
-
-    // console.log('REDS[I].COLLIDE()', reds[i].collide())
     reds[i].walk()
   }
 

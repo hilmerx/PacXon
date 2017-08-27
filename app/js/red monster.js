@@ -12,11 +12,21 @@ function redMonster(id){
   // this.angle = PI
 
   this.v = new p5.Vector(0,1);
-  this.origSpeed = 5
+  this.origSpeed = 2
   this.speed = this.origSpeed
   this.radius = 10
 
-  
+  this.collide = function(){
+
+    for (var i = 0; i<grid.length; i++){
+      for (var j = 0; j<grid[i].length; j++){
+        if(grid[i][j].takeRoute && this.squareCollide(i,j)){
+          die()
+        }
+      }
+    }
+  }
+
   this.bounce = function (i, j, line){
     console.log(i,j,line)
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
