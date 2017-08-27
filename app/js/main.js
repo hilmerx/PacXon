@@ -40,8 +40,8 @@ function setup(){
       }
     }
 
-    // lines[0] = new Line(200,300,300,320)
-    // lines[1] = new Line(100,300,120,220)
+    lines[0] = new Line(200,300,300,320)
+    lines[1] = new Line(100,300,120,220)
 
   allSquares = (rows-2)*(cols-2)
 

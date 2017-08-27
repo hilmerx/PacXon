@@ -12,6 +12,13 @@ function Cell(x,y){
 
   this.hasFlooded = false
 
+  this.lines = [
+                {x1:this.x,y1: this.y,x2: this.x+w,y2: this.y},
+                {x1:this.x+w,y1: this.y,x2: this.x+w,y2: this.y+w},
+                {x1:this.x+w,y1: this.y+w,x2: this.x,y2: this.y+w},
+                {x1:this.x,y1: this.y+w,x2: this.x,y2: this.y}
+              ]
+
 
 }
 
