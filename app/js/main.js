@@ -15,17 +15,20 @@ var cols = 20
 var w = 20
 var speed = 6
 var speedCounter = 0
-var redMonsters = 2
+var redMonsters = 1
 var allSquares = 0
-
-
+var redMonsterColor
+var pxPurple
 var grid
 var pacman;
 var reds = []
+var lines = []
 
 function setup(){
   // frameRate(5)
   createCanvas(401,401,)
+   redMonsterColor = color(255,0,0)
+   pxPurple = color(255,0,255)
 
 
   grid = Make2DArray(rows, cols)
@@ -35,6 +38,11 @@ function setup(){
         grid[i][j] = new Cell(i,j)
       }
     }
+
+    // lines[0] = new Line(200,300,300,300)
+    lines[0] = new Line(200,300,300,320)
+    lines[1] = new Line(100,300,120,220)
+  // lines[0] = new Line(100,100,100,200)
 
   allSquares = (rows-2)*(cols-2)
 
@@ -57,11 +65,19 @@ function draw(){
       grid[i][j].show();
     }
   }
+  for (var j = 0; j<lines.length; j++){
+    lines[j].show();
+    // console.log(j)
+  }
+
   pacman.show()
 
   for (var i = 0; i<redMonsters; i++){
     reds[i].show()
-    reds[i].collide()
+    // reds[i].collide()
+    reds[i].collide1()
+    reds[i].collideWithLine()
+
     // console.log('REDS[I].COLLIDE()', reds[i].collide())
     reds[i].walk()
   }
