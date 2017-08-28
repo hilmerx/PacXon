@@ -1,6 +1,6 @@
 function redMonster(id){
   this.id = id
-  this.location = new p5.Vector(200 - id*w , 350 - id*w);
+  this.location = new p5.Vector(45, 55);
   // this.x = 250
   // this.y = 250
   this.d = 20
@@ -8,11 +8,11 @@ function redMonster(id){
   // this.y = 230
 
   // this.angle = 3*PI/2
-  this.angle = Math.random()*322 * (Math.PI / 180);
-  // this.angle = PI
+  this.angle = (180-45) * (Math.PI / 180);
+  this.angle = 90 * (Math.PI / 180)
 
   this.v = new p5.Vector(0,1);
-  this.origSpeed = 1
+  this.origSpeed = 0.1
   this.speed = this.origSpeed
   this.radius = 10
 
@@ -35,7 +35,9 @@ function redMonster(id){
 
 
   this.bounce = function (i, j, line){
+
     // console.log(i,j,line)
+
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
     let linePerpVector = new p5.Vector(1,linePerpSlope)
@@ -60,24 +62,51 @@ function redMonster(id){
     // console.log(newAngle)
 
     this.angle = newAngleRad+0.02;
-    this.speed = this.speed +3;
+    this.speed = this.speed;
   }
+
+  this.endPointBounce = function (i, j, p){
+
+    // console.log(i,j,line
+    let m = {x:this.location.x, y: this.location.y}
+
+
+
+
+    let impactAngle = atan((p.y-m.y)/(p.x-m.x))* (180 / PI)
+    console.log(impactAngle)
+    let reverseIA = impactAngle + 180
+
+    let thisAngleDeg = this.angle* (180 / PI);
+
+    let newAngle = reverseIA
+
+    // console.log(newAngle)
+
+    let newAngleRad = newAngle * (Math.PI / 180)
+    // console.log(newAngleRad)
+
+    // console.log(newAngle)
+
+    this.angle = newAngleRad+0.02;
+    this.speed = this.speed;
+  }
+
+
 
   this.collideWithLine = function(){
     for (var i = 0; i<grid.length; i++){
       for (var j = 0; j<grid[i].length; j++){
-
         if(grid[i][j].on){
-          // console.log(grid[i][j])
           collidingLine =this.lineCollideCheck(grid[i][j])
+          collidingLineEnd =this.lineEndCollideCheck(grid[i][j])
           if (collidingLine) {
-
-            // text("HELLLLOO", 200,200)
-            // console.log(collidingLine)
-
-            // redMonsterColor = color(120,200,0)
             this.bounce(i, j, collidingLine);
             return
+          } else if (collidingLineEnd) {
+            // this.endPointBounce(i, j, collidingLineEnd);
+            this.bounce(i, j, collidingLine);
+
           } else {
             redMonsterColor = color(255,0,0)
           }
@@ -137,10 +166,33 @@ redMonster.prototype.squareCollide = function(i,j){
 }
 
 let result
+
+redMonster.prototype.lineEndCollideCheck = function(obj){
+  let point
+  let lines
+  let endPointCollides
+
+  lines = obj.activeLines
+
+  for (var i = 0; i < lines.length; i++){
+    let l = lines[i]
+
+    if (dist(l.x1,l.y1, this.location.x,this.location.y) < dist(l.x2,l.y2, this.location.x,this.location.y)){
+      point = {x:l.x1, y: l.y1}
+    } else {
+      point = {x:l.x2, y: l.y2}
+    }
+
+    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<=1+this.d/2
+    if (endPointCollides) {
+      return point
+    } else {
+      //DO NOTHING
+    }
+  }
+}
 redMonster.prototype.lineCollideCheck = function(obj){
-
-
-  let lines = obj.lines
+  let lines = obj.activeLines
   let lineLength
   let line
   let lineSlope
@@ -166,10 +218,6 @@ redMonster.prototype.lineCollideCheck = function(obj){
   for (var i = 0; i < lines.length; i++){
 
     l = lines[i]
-
-
-    // console.log( line)
-
     lineLength = dist(l.x1,l.y1,l.x2,l.y2)
 
     if (l.x1 === l.x2){
@@ -207,30 +255,16 @@ redMonster.prototype.lineCollideCheck = function(obj){
     m = {x: this.location.x-l.x1, y: this.location.y-l.y1}
     m2 = {x: this.location.x-l.x2, y: this.location.y-l.y2}
 
-    // let dotProduct1 = hor.x*m.x+hor.y*m.y
-    // let dotProduct2 = hor.x*m2.x+hor.y*m2.y
     dotProduct1 = v.x*m.x+v.y*m.y
     dotProduct2 = v.x*m2.x+v.y*m2.y
 
-
-
     withinBoundries = (dotProduct1>0 && dotProduct2<0)
 
-
-    if (dist(l.x1,l.y1, this.location.x,this.location.y) < dist(l.x2,l.y2, this.location.x,this.location.y)){
-      point = {x:l.x1, y: l.y1}
-    } else {
-      point = {x:l.x2, y: l.y2}
-    }
-
-    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.d/2-6
     isOnInfLine = dist(this.location.x, this.location.y, newX, newY)< this.d/2
 
-    if (isOnInfLine && withinBoundries /*|| endPointCollides*/){
-
+    if (isOnInfLine && withinBoundries){
       return l
-
-    } else {
+    } else{
       //DO NOTHING
     }
   }

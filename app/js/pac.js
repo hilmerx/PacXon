@@ -95,9 +95,11 @@ Pac.prototype.take = function(){
       }
 
       //search for floodFill-prospects
+
       checkFlood()
       takeArr=[];
       emptyRoute()
+      initLineChecks()
       pacman.flying = false;
 
       if (!keyIsPressed){

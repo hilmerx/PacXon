@@ -17,7 +17,7 @@ var cols2 = 1
 var w = 20
 var speed = 6
 var speedCounter = 0
-var redMonsters = 5
+var redMonsters = 1
 var allSquares = 0
 var redMonsterColor
 var pxPurple
@@ -45,7 +45,7 @@ function setup(){
     }
 
 
-    gridTEST[0][0] = new CellTEST(0,0)
+    // gridTEST[0][0] = new CellTEST(0,0)
 
     lines[0] = new Line(200,300,300,320)
     lines[1] = new Line(100,300,120,220)
@@ -60,6 +60,9 @@ function setup(){
   }
 
   startSquare()
+
+  initLineChecks()
+
 
 }
 
@@ -103,7 +106,7 @@ function draw(){
 
   for (var i = 0; i<grid.length; i++){
     for (var j = 0; j<grid[i].length; j++){
-      // grid[i][j].showLine()
+      grid[i][j].showLine()
 
 
     }
@@ -153,5 +156,14 @@ function calcPercent(){
   }
 
   return winPercent = parseInt(onSquares / allSquares*100)
+}
 
+function initLineChecks() {
+  for (var i = 0; i<grid.length; i++){
+    for (var j = 0; j<grid[i].length; j++){
+      if (grid[i][j].on === true){
+        grid[i][j].lineCheck()
+      }
+    }
+  }
 }
