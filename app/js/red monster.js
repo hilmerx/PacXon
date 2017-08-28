@@ -12,7 +12,7 @@ function redMonster(id){
   // this.angle = PI
 
   this.v = new p5.Vector(0,1);
-  this.origSpeed = 2
+  this.origSpeed = 1
   this.speed = this.origSpeed
   this.radius = 10
 
@@ -25,10 +25,17 @@ function redMonster(id){
         }
       }
     }
+
+  for (var i = 0; i<reds.length; i++){
+        if(dist(this.location.x, this.location.y, reds[i].location.x, reds[i].location.y)<this.radius*2 && reds[i].id+1 !== this.id+1){
+          reds[i].angle += 179*random() * (Math.PI / 180);
+      }
+    }
   }
 
+
   this.bounce = function (i, j, line){
-    console.log(i,j,line)
+    // console.log(i,j,line)
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
     let linePerpVector = new p5.Vector(1,linePerpSlope)
@@ -45,10 +52,10 @@ function redMonster(id){
     // console.log(thisAngleDeg - newAngleDiff)*2
     let newAngle = (thisAngleDeg - newAngleDiff)+180
 
-    console.log(newAngle)
+    // console.log(newAngle)
 
     let newAngleRad = newAngle * (Math.PI / 180)
-    console.log(newAngleRad)
+    // console.log(newAngleRad)
 
     // console.log(newAngle)
 
@@ -64,7 +71,11 @@ function redMonster(id){
           // console.log(grid[i][j])
           collidingLine =this.lineCollideCheck(grid[i][j])
           if (collidingLine) {
-            redMonsterColor = color(120,200,0)
+
+            // text("HELLLLOO", 200,200)
+            // console.log(collidingLine)
+
+            // redMonsterColor = color(120,200,0)
             this.bounce(i, j, collidingLine);
             return
           } else {
@@ -109,8 +120,8 @@ function redMonster(id){
 
 redMonster.prototype.squareCollide = function(i,j){
 
-  var distX = Math.abs(this.x - grid[i][j].x-w/2);
-  var distY = Math.abs(this.y - grid[i][j].y-w/2);
+  var distX = Math.abs(this.location.x - grid[i][j].x-w/2);
+  var distY = Math.abs(this.location.y - grid[i][j].y-w/2);
 
   if (distX > (w/2 + this.radius)) { return false; }
   if (distY > (w/2 + this.radius)) { return false; }
@@ -212,8 +223,8 @@ redMonster.prototype.lineCollideCheck = function(obj){
       point = {x:l.x2, y: l.y2}
     }
 
-    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.d/2-2
-    isOnInfLine = dist(this.location.x, this.location.y, newX, newY)<= this.d/2
+    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.d/2-6
+    isOnInfLine = dist(this.location.x, this.location.y, newX, newY)< this.d/2
 
     if (isOnInfLine && withinBoundries /*|| endPointCollides*/){
 

@@ -17,7 +17,7 @@ var cols2 = 1
 var w = 20
 var speed = 6
 var speedCounter = 0
-var redMonsters = 4
+var redMonsters = 5
 var allSquares = 0
 var redMonsterColor
 var pxPurple
