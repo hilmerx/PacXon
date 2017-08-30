@@ -1,20 +1,24 @@
 function redMonster(id){
   this.id = id
-  this.location = new p5.Vector(45, 55);
+  console.log(id)
+  this.location = new p5.Vector(60, 30*(id+1));
+  // this.location = new p5.Vector(50, 50);
   // this.x = 250
   // this.y = 250
-  this.d = 20
+  this.d = 16
   // this.x = 230
   // this.y = 230
+  this.mass = 10
 
   // this.angle = 3*PI/2
+  // this.angle = (180-45)*random() * (Math.PI / 180);
   this.angle = (180-45) * (Math.PI / 180);
-  this.angle = 90 * (Math.PI / 180)
+  // this.angle = 90 * (Math.PI / 180)
 
   this.v = new p5.Vector(0,1);
-  this.origSpeed = 0.1
+  this.origSpeed = 1
   this.speed = this.origSpeed
-  this.radius = 10
+  this.radius = 8
 
   this.collide = function(){
 
@@ -28,15 +32,40 @@ function redMonster(id){
 
   for (var i = 0; i<reds.length; i++){
         if(dist(this.location.x, this.location.y, reds[i].location.x, reds[i].location.y)<this.radius*2 && reds[i].id+1 !== this.id+1){
-          reds[i].angle += 179*random() * (Math.PI / 180);
+
+          let second = reds[i]
+
+          thisSpeedX = Math.cos(this.angle)*this.speed
+          thisSpeedY = Math.sin(this.angle)*this.speed
+          secondSpeedX = Math.cos(second.angle)*second.speed
+          secondSpeedY = Math.sin(second.angle)*second.speed
+
+          thisNewX = (thisSpeedX * (this.mass - second.mass) + (2 * second.mass * secondSpeedX)) / (this.mass + second.mass)
+          thisNewY = (thisSpeedY * (this.mass - second.mass) + (2 * second.mass * secondSpeedY)) / (this.mass + second.mass)
+          secondNewX = (secondSpeedX * (second.mass - this.mass) + (2 * this.mass * thisSpeedX)) / (this.mass + second.mass)
+          secondNewY = (secondSpeedY * (second.mass - this.mass) + (2 * this.mass * thisSpeedY)) / (this.mass + second.mass)
+
+          console.log(thisNewX,thisNewY)
+
+          this.angle = atan2(thisNewY, thisNewX)
+          this.speed = dist(0,0,thisNewX,thisNewY)
+          console.log(this.angle)
+          this.walk()
+
+          reds[i].angle = atan2(secondNewY, secondNewX)
+          reds[i].speed = dist(0,0,secondNewX,secondNewY)
+
+          // console.log(this.angle)
+          // console.log(reds[i].angle)
+          reds[i].walk()
       }
     }
   }
 
 
-  this.bounce = function (i, j, line){
+  this.bounce = function (line){
 
-    // console.log(i,j,line)
+    // console.log(line)
 
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
@@ -61,25 +90,24 @@ function redMonster(id){
 
     // console.log(newAngle)
 
-    this.angle = newAngleRad+0.02;
-    this.speed = this.speed;
+    this.angle = newAngleRad+0.02
+    this.speed = this.speed+0.02
   }
 
-  this.endPointBounce = function (i, j, p){
+  this.endPointBounce = function (lines){
 
-    // console.log(i,j,line
+    console.log(p)
     let m = {x:this.location.x, y: this.location.y}
 
-
-
-
-    let impactAngle = atan((p.y-m.y)/(p.x-m.x))* (180 / PI)
-    console.log(impactAngle)
-    let reverseIA = impactAngle + 180
-
     let thisAngleDeg = this.angle* (180 / PI);
+    let impactAngle = atan((p.y-m.y)/(p.x-m.x))* (180 / PI)
+    // console.log(impactAngle)
+
+    let reverseIA = thisAngleDeg -181
+    console.log(thisAngleDeg)
 
     let newAngle = reverseIA
+    // console.log(thisAngleDeg)
 
     // console.log(newAngle)
 
@@ -87,37 +115,36 @@ function redMonster(id){
     // console.log(newAngleRad)
 
     // console.log(newAngle)
+    // let newAngle = thisAngleDeg + 172
+    // let newAngleRad = newAngle * (Math.PI / 180)
+    this.angle = newAngleRad;
+    this.speed = this.speed+1;
 
-    this.angle = newAngleRad+0.02;
-    this.speed = this.speed;
   }
 
 
 
   this.collideWithLine = function(){
-    for (var i = 0; i<grid.length; i++){
-      for (var j = 0; j<grid[i].length; j++){
-        if(grid[i][j].on){
-          collidingLine =this.lineCollideCheck(grid[i][j])
-          collidingLineEnd =this.lineEndCollideCheck(grid[i][j])
-          if (collidingLine) {
-            this.bounce(i, j, collidingLine);
-            return
-          } else if (collidingLineEnd) {
-            // this.endPointBounce(i, j, collidingLineEnd);
-            this.bounce(i, j, collidingLine);
+    collidingLines =this.lineCollideCheck()
+    collidingLineEnd =this.lineEndCollideCheck()
+    if (collidingLines) {
+      collidingLines.forEach((line) => {
+        this.bounce(line)
+      })
+      return
+    } else if (collidingLineEnd) {
+      collidingLines.forEach((line) => {
+        this.endPointBounce(line)
+      })
 
-          } else {
-            redMonsterColor = color(255,0,0)
-          }
-        }
-      }
+    } else {
+      // redMonsterColor = color(255,0,0)
     }
   }
 
   this.show = function(){
-    noStroke()
-    fill(redMonsterColor)
+    // stroke(100,0,200)
+    fill(150,200,0,200)
     ellipseMode(CENTER);
     // ellipse(this.location.x, this.location.y, 20, 20)
     ellipse(this.location.x, this.location.y, this.d, this.d)
@@ -171,9 +198,9 @@ redMonster.prototype.lineEndCollideCheck = function(obj){
   let point
   let lines
   let endPointCollides
+  let linesToReturn =[]
 
-  lines = obj.activeLines
-
+  lines = allLines
   for (var i = 0; i < lines.length; i++){
     let l = lines[i]
 
@@ -183,16 +210,19 @@ redMonster.prototype.lineEndCollideCheck = function(obj){
       point = {x:l.x2, y: l.y2}
     }
 
-    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<=1+this.d/2
+    endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.d/2
     if (endPointCollides) {
-      return point
+      linesToReturn.push(l)
+
     } else {
       //DO NOTHING
     }
   }
+  return linesToReturn
+
 }
 redMonster.prototype.lineCollideCheck = function(obj){
-  let lines = obj.activeLines
+  let lines = allLines
   let lineLength
   let line
   let lineSlope
@@ -211,12 +241,10 @@ redMonster.prototype.lineCollideCheck = function(obj){
   let point
   let endPointCollides
   let isOnInfLine
-
-  // this.x = this.location.x
-  // this.y = this.location.y
+  let linesToReturn =[]
 
   for (var i = 0; i < lines.length; i++){
-
+    // console.log(i)
     l = lines[i]
     lineLength = dist(l.x1,l.y1,l.x2,l.y2)
 
@@ -263,9 +291,10 @@ redMonster.prototype.lineCollideCheck = function(obj){
     isOnInfLine = dist(this.location.x, this.location.y, newX, newY)< this.d/2
 
     if (isOnInfLine && withinBoundries){
-      return l
+      linesToReturn.push(l)
     } else{
       //DO NOTHING
     }
   }
+  return linesToReturn
 }

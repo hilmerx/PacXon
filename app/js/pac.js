@@ -59,6 +59,7 @@ function Pac(){
 }
 
 Pac.prototype.show = function(){
+  noStroke()
   fill(255,255,0)
   ellipseMode(CENTER);
   ellipse(this.aniX, this.aniY, 20, 20)

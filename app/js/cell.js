@@ -15,10 +15,11 @@ function Cell(x,y){
   this.lines = [
                 {pos: "top", x1:this.x,y1: this.y,x2: this.x+w,y2: this.y},
                 {pos: "right", x1:this.x+w,y1: this.y,x2: this.x+w,y2: this.y+w},
-                {pos: "bottom", x1:this.x+w,y1: this.y+w,x2: this.x,y2: this.y+w},
-                {pos: "left", x1:this.x,y1: this.y+w,x2: this.x,y2: this.y}
+                {pos: "bottom", x1:this.x,y1: this.y+w,x2: this.x+w,y2: this.y+w},
+                {pos: "left", x1:this.x, y1: this.y, x2: this.x, y2: this.y+w}
               ]
   this.activeLines = []
+  this.linesPushed = false
 
   this.showLine = function(){
     let line
@@ -80,15 +81,33 @@ Cell.prototype.lineCheck = function(){
   if (above >= 0 && grid[thisX][above].on === false) {
     this.activeLines.push(this.lines[0])
   }
-  if (below < rows && grid[thisX][below].on === false) {
-    this.activeLines.push(this.lines[2])
-  }
   if (left >= 0 && grid[left][thisY].on === false) {
     this.activeLines.push(this.lines[3])
+  }
+  if (below < rows && grid[thisX][below].on === false) {
+    this.activeLines.push(this.lines[2])
   }
   if (right < cols && grid[right][thisY].on === false) {
     this.activeLines.push(this.lines[1])
   }
+}
+
+Cell.prototype.lineConsolidation = function(i){
+
+
+  let thisX = this.i[0]
+  let thisY = this.i[1]
+
+  let above = thisY-1
+  let below = thisY+1
+  let left = thisX-1
+  let right = thisX+1
+
+
+  this.activeLines.forEach((data)=>{
+    lines.push(data)
+  })
+
 }
 
 
@@ -103,14 +122,31 @@ function startSquare(){
 
     }
   }
+  for (var i = 0; i<5; i++){
+    for (var j = 0; j<5; j++){
+
+      grid[i][0].on = true;
+      grid[i][5].on = true;
+      grid[5][j].on = true;
+      grid[0][j].on = true;
+
+    }
+  }
+
+  grid[1][1].on = true;
 
 
+      grid[9][1].on = true;
+      grid[18][9].on = true;
+      grid[9][18].on = true;
+      grid[1][9].on = true;
 
-      grid[1][1].on = true;
-      // grid[19][5].on = true;
-      // grid[18][5].on = true;
-      // grid[19][6].on = true;
-      //
+      grid[9][9].on = true;
+      grid[9][10].on = true;
+      grid[10][9].on = true;
+      grid[10][10].on = true;
+      grid[19][6].on = true;
+
 
 
   // for (var i = 0; i<grid.length/2; i++){
@@ -135,13 +171,16 @@ Cell.prototype.floodFill = function(){
     this.hasFlooded = true;
     // this.on2 = true;
     floodArr.push(this.i)
-    for (var xoff = -1; xoff<=1; xoff++){
-      for (var yoff = -1; yoff<=1; yoff++){
-        grid[this.i[0]-xoff][this.i[1]-yoff].floodFill()
-          // grid[this.i[0]-xoff][this.i[1]-yoff].on2 = true
+    // for (var xoff = -1; xoff<=1; xoff++){
+    //   for (var yoff = -1; yoff<=1; yoff++){
+    //     grid[this.i[0]-xoff][this.i[1]-yoff].floodFill()
+    //   }
+    // }
+    grid[this.i[0]][this.i[1]+1].floodFill()
+    grid[this.i[0]][this.i[1]-1].floodFill()
+    grid[this.i[0]+1][this.i[1]].floodFill()
+    grid[this.i[0]-1][this.i[1]].floodFill()
 
-      }
-    }
     return floodArr;
 
   }
@@ -194,6 +233,7 @@ function checkFlood(){
     if(!dir.on && !dir.hasFlooded && !dir.takeRoute){
       getFlood.push(grid[dir.i[0]][dir.i[1]].floodFill())
       floodArr = []
+
     }
 
   }
