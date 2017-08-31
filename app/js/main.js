@@ -17,14 +17,18 @@ var cols2 = 1
 var w = 20
 var speed = 6
 var speedCounter = 0
-var redMonsters = 5
+
+var bouncersNr = 1
+var eatersNr = 1
+
+var bouncers = []
+var eaters = []
+
 var allSquares = 0
 var redMonsterColor
 var pxPurple
 var grid
-var gridTEST
 var pacman;
-var reds = []
 var lines = []
 var allLines = []
 let frame = 0
@@ -55,8 +59,12 @@ function setup(){
 
   pacman = new Pac()
 
-  for (var i = 0; i<redMonsters; i++){
-    reds[i] = new redMonster(i)
+  for (var i = 0; i<bouncersNr; i++){
+    bouncers[i] = new Bouncer(i)
+  }
+
+  for (var i = 0; i<eatersNr; i++){
+    eaters[i] = new Eater(i)
   }
 
   startSquare()
@@ -89,17 +97,25 @@ function draw(){
     }
   }
 
+
   allLines.forEach((data) => {
-    reds[0].lineShow(data.x1, data.y1, data.x2, data.y2)
+    bouncers[0].lineShow(data.x1, data.y1, data.x2, data.y2)
   })
 
   pacman.show()
 
-  for (var i = 0; i<redMonsters; i++){
-    reds[i].show()
-    reds[i].collide()
-    reds[i].collideWithLine()
-    reds[i].walk()
+  for (var i = 0; i<bouncersNr; i++){
+    bouncers[i].show()
+    bouncers[i].collide()
+    bouncers[i].collideWithLine()
+    bouncers[i].walk()
+  }
+
+  for (var i = 0; i<eatersNr; i++){
+    eaters[i].show()
+    eaters[i].collide()
+    eaters[i].collideWithLine()
+    eaters[i].walk()
   }
 
   pacman.move()

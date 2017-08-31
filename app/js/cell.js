@@ -8,6 +8,7 @@ function Cell(x,y){
   this.i = [x,y]
   this.on = false
   this.on2 = false
+  this.onPermanent = false
   this.takeRoute = false
 
   this.hasFlooded = false
@@ -31,7 +32,7 @@ function Cell(x,y){
         stroke(255,0,255)
         fill(255,120,120)
 
-        reds[0].lineShow(line.x1, line.y1, line.x2, line.y2)
+        bouncers[0].lineShow(line.x1, line.y1, line.x2, line.y2)
         // line(line.x1, line.y1, line.x2, line.y2)
         // point(line.x2, line.y2)
         // point(line.x1, line.y1)
@@ -122,6 +123,14 @@ function startSquare(){
 
     }
   }
+  for (var i = 0; i<grid.length; i++){
+    for (var j = 0; j<grid[i].length; j++){
+      if (grid[i][j].on === true) {
+        grid[i][j].onPermanent = true
+      }
+    }
+  }
+
   // for (var i = 0; i<5; i++){
   //   for (var j = 0; j<5; j++){
   //
@@ -136,33 +145,24 @@ function startSquare(){
   // grid[1][1].on = true;
 
 
-      grid[10][1].on = true;
-      grid[9][1].on = true;
-      grid[18][9].on = true;
-      grid[18][10].on = true;
-      grid[9][18].on = true;
-      grid[10][18].on = true;
-      grid[1][9].on = true;
-      grid[1][10].on = true;
+      // grid[10][1].on = true;
+      // grid[9][1].on = true;
+      // grid[18][9].on = true;
+      // grid[18][10].on = true;
+      // grid[9][18].on = true;
+      // grid[10][18].on = true;
+      // grid[1][9].on = true;
+      // grid[1][10].on = true;
+      //
+      // grid[9][9].on = true;
+      // grid[9][10].on = true;
+      // grid[10][9].on = true;
+      // grid[10][10].on = true;
+      // grid[19][6].on = true;
 
-      grid[9][9].on = true;
-      grid[9][10].on = true;
-      grid[10][9].on = true;
-      grid[10][10].on = true;
-      grid[19][6].on = true;
 
 
 
-  // for (var i = 0; i<grid.length/2; i++){
-  //   for (var j = 0; j<grid[i].length/2; j++){
-  //
-  //     grid[i][0].on = true;
-  //     grid[i][cols/2-1].on = true;
-  //     grid[rows/2-1][j].on = true;
-  //     grid[0][j].on = true;
-  //
-  //   }
-  // }
   // grid[1][1].floodFill()
 
 }
@@ -257,8 +257,8 @@ function checkFlood(){
         currentY = currentSpace[ii][1]
         currentCell = grid[currentX][currentY]
 
-        for (var iii = 0; iii<reds.length; iii++){
-          if (dist(currentCell.x,currentCell.y, reds[iii].location.x, reds[iii].location.y) < w){
+        for (var iii = 0; iii<bouncers.length; iii++){
+          if (dist(currentCell.x,currentCell.y, bouncers[iii].location.x, bouncers[iii].location.y) < w){
             foundMoster = true
           }
         }
@@ -282,6 +282,7 @@ function emptyRoute(){
   for (var i = 0; i<grid.length; i++){
     for (var j = 0; j<grid[i].length; j++){
       grid[i][j].takeRoute = false;
+      // grid[i][j].takeRoute = false;
     }
   }
 

@@ -1,4 +1,4 @@
-function redMonster(id){
+function Bouncer(id){
   this.id = id
   this.location = new p5.Vector(60, 30*(id+1));
   // this.location = new p5.Vector(58, 45);
@@ -30,10 +30,10 @@ function redMonster(id){
       }
     }
 
-  for (var i = 0; i<reds.length; i++){
-        if(dist(this.location.x, this.location.y, reds[i].location.x, reds[i].location.y)<this.radius*2 && reds[i].id+1 !== this.id+1){
+  for (var i = 0; i<bouncers.length; i++){
+        if(dist(this.location.x, this.location.y, bouncers[i].location.x, bouncers[i].location.y)<this.radius*2 && bouncers[i].id+1 !== this.id+1){
 
-          let second = reds[i]
+          let second = bouncers[i]
 
           thisSpeedX = Math.cos(this.angle)*this.speed
           thisSpeedY = Math.sin(this.angle)*this.speed
@@ -52,12 +52,12 @@ function redMonster(id){
           // console.log(this.angle)
           this.walk()
 
-          reds[i].angle = atan2(secondNewY, secondNewX)
-          reds[i].speed = dist(0,0,secondNewX,secondNewY)
+          bouncers[i].angle = atan2(secondNewY, secondNewX)
+          bouncers[i].speed = dist(0,0,secondNewX,secondNewY)
 
           // console.log(this.angle)
-          // console.log(reds[i].angle)
-          reds[i].walk()
+          // console.log(bouncers[i].angle)
+          bouncers[i].walk()
       }
     }
   }
@@ -153,7 +153,7 @@ function redMonster(id){
 
 
   this.walk = function(){
-    // console.log(Math.sin(reds[1].angle))
+    // console.log(Math.sin(bouncers[1].angle))
     this.location.y -= Math.sin(this.angle)*this.speed
     this.location.x += Math.cos(this.angle)*this.speed
     // this.location.add(this.v)
@@ -166,7 +166,7 @@ function redMonster(id){
   }
 }
 
-redMonster.prototype.squareCollide = function(i,j){
+Bouncer.prototype.squareCollide = function(i,j){
 
   var distX = Math.abs(this.location.x - grid[i][j].x-w/2);
   var distY = Math.abs(this.location.y - grid[i][j].y-w/2);
@@ -186,7 +186,7 @@ redMonster.prototype.squareCollide = function(i,j){
 
 let result
 
-redMonster.prototype.lineEndCollideCheck = function(obj){
+Bouncer.prototype.lineEndCollideCheck = function(obj){
   let point
   let lines
   let endPointCollides
@@ -212,7 +212,7 @@ redMonster.prototype.lineEndCollideCheck = function(obj){
   }
 
 }
-redMonster.prototype.lineCollideCheck = function(obj){
+Bouncer.prototype.lineCollideCheck = function(obj){
   let lines = allLines
   let lineLength
   let line
