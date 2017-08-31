@@ -1,6 +1,6 @@
 function Eater(id){
   this.id = id
-  this.location = new p5.Vector(100, 150);
+  this.location = new p5.Vector(100*(id+1), 150);
   // this.location = new p5.Vector(58, 45);
   // this.location = new p5.Vector(45, 50);
   // this.x = 250

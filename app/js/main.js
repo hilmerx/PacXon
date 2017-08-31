@@ -18,11 +18,13 @@ var w = 20
 var speed = 6
 var speedCounter = 0
 
-var bouncersNr = 5
-var eatersNr = 2
+var bouncersNr = 3
+var eatersNr = 1
+var lineStepperNr =  1
 
 var bouncers = []
 var eaters = []
+var lineSteppers = []
 
 var allSquares = 0
 var redMonsterColor
@@ -49,6 +51,9 @@ function setup(){
         grid[i][j] = new Cell(i,j)
       }
     }
+    startSquare()
+
+    initLineChecks()
 
 
     // gridTEST[0][0] = new CellTEST(0,0)
@@ -67,10 +72,10 @@ function setup(){
     eaters[i] = new Eater(i)
   }
 
-  startSquare()
 
-  initLineChecks()
-
+  for (var i = 0; i<lineStepperNr; i++){
+    // lineSteppers[i] = new lineStepper(i)
+  }
 
 }
 
@@ -117,6 +122,11 @@ function draw(){
     eaters[i].collideWithLine()
     eaters[i].walk()
   }
+  //
+  // for (var i = 0; i<lineStepperNr; i++){
+  //   lineSteppers[i].show()
+  //   lineSteppers[i].walk()
+  // }
 
   pacman.move()
   pacman.moveAni()
