@@ -131,7 +131,7 @@ function Eater(id){
     } else if (collidingLineEnd) {
         this.endPointBounce(collidingLineEnd)
         this.eatCell()
-        
+
     } else {
       //DO NOTHING
     }
@@ -175,6 +175,11 @@ Eater.prototype.eatCell = function(){
       if(this.squareCollide(i,j) && grid[i][j].onPermanent === false) {
         grid[i][j].on = false
         initLineChecks()
+        if (grid[i][j].x2 === pacman.x && grid[i][j].y2 === pacman.y) {
+          console.log("FLYYYY")
+          pacman.direction = pacman.lastDirection
+          pacman.flying = true;
+        }
       }
     }
   }

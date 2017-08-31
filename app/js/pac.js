@@ -5,6 +5,7 @@ function Pac(){
   this.aniY = w/2
   this.alive = true
   this.direction = ""
+  this.lastDirection = ""
   this.takeRoute = false
   this.flying = false
   this.aniSpeed = 4
@@ -79,7 +80,7 @@ Pac.prototype.take = function(){
         }
 
 
-        if(pacman.prevX-w/2 === grid[i][j].x && pacman.prevY-w/2 === grid[i][j].y && grid[i][j].on === false && grid[i][j].takeRoute === false){
+        if(pacman.prevX-w/2 === grid[i][j].x && pacman.prevY-w/2 === grid[i][j].y && grid[i][j].on === false && grid[i][j].takeRoute === false && pacman.flying === true){
           grid[i][j].takeRoute = true
           takeArr.push([i,j]);
       }
@@ -121,6 +122,7 @@ Pac.prototype.take = function(){
   }
 }
 
+
 var keyIsPressed=false;
 
 function keyPressed(){
@@ -130,6 +132,7 @@ function keyPressed(){
     }else {
       keyIsPressed=true;
       pacman.direction="right"
+      pacman.lastDirection = pacman.direction
     }
 
   }
@@ -140,6 +143,7 @@ function keyPressed(){
       keyIsPressed=true;
 
       pacman.direction="left"
+      pacman.lastDirection = pacman.direction
     }
   }
   else if (keyCode===UP_ARROW){
@@ -149,6 +153,8 @@ function keyPressed(){
       keyIsPressed=true;
 
       pacman.direction="up"
+      pacman.lastDirection = pacman.direction
+
     }
   }
   else if (keyCode===DOWN_ARROW){
@@ -158,6 +164,8 @@ function keyPressed(){
       keyIsPressed=true;
 
       pacman.direction="down"
+      pacman.lastDirection = pacman.direction
+      
     }
   }
 }

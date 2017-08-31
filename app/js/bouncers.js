@@ -16,7 +16,7 @@ function Bouncer(id){
   // this.angle = 180 * (Math.PI / 180)
 
   this.v = new p5.Vector(0,1);
-  this.origSpeed = 1
+  this.origSpeed = 2
   this.speed = this.origSpeed
   this.radius = 8
 

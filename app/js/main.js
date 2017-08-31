@@ -18,8 +18,8 @@ var w = 20
 var speed = 6
 var speedCounter = 0
 
-var bouncersNr = 1
-var eatersNr = 1
+var bouncersNr = 5
+var eatersNr = 2
 
 var bouncers = []
 var eaters = []

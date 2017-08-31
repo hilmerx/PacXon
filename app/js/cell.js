@@ -262,6 +262,11 @@ function checkFlood(){
             foundMoster = true
           }
         }
+        for (var iii = 0; iii<eaters.length; iii++){
+          if (dist(currentCell.x,currentCell.y, eaters[iii].location.x, eaters[iii].location.y) < w){
+            foundMoster = true
+          }
+        }
       }
       if (foundMoster) {
         //DO NOTHING
@@ -282,7 +287,6 @@ function emptyRoute(){
   for (var i = 0; i<grid.length; i++){
     for (var j = 0; j<grid[i].length; j++){
       grid[i][j].takeRoute = false;
-      // grid[i][j].takeRoute = false;
     }
   }
 
