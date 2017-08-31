@@ -1,8 +1,8 @@
 function redMonster(id){
   this.id = id
-  console.log(id)
   this.location = new p5.Vector(60, 30*(id+1));
-  // this.location = new p5.Vector(50, 50);
+  // this.location = new p5.Vector(58, 45);
+  // this.location = new p5.Vector(45, 50);
   // this.x = 250
   // this.y = 250
   this.d = 16
@@ -11,9 +11,9 @@ function redMonster(id){
   this.mass = 10
 
   // this.angle = 3*PI/2
-  // this.angle = (180-45)*random() * (Math.PI / 180);
-  this.angle = (180-45) * (Math.PI / 180);
-  // this.angle = 90 * (Math.PI / 180)
+  this.angle = (180-45)*random() * (Math.PI / 180);
+  // this.angle = 90 * (Math.PI / 180);
+  // this.angle = 180 * (Math.PI / 180)
 
   this.v = new p5.Vector(0,1);
   this.origSpeed = 1
@@ -45,11 +45,11 @@ function redMonster(id){
           secondNewX = (secondSpeedX * (second.mass - this.mass) + (2 * this.mass * thisSpeedX)) / (this.mass + second.mass)
           secondNewY = (secondSpeedY * (second.mass - this.mass) + (2 * this.mass * thisSpeedY)) / (this.mass + second.mass)
 
-          console.log(thisNewX,thisNewY)
+          // console.log(thisNewX,thisNewY)
 
           this.angle = atan2(thisNewY, thisNewX)
           this.speed = dist(0,0,thisNewX,thisNewY)
-          console.log(this.angle)
+          // console.log(this.angle)
           this.walk()
 
           reds[i].angle = atan2(secondNewY, secondNewX)
@@ -94,31 +94,26 @@ function redMonster(id){
     this.speed = this.speed+0.02
   }
 
-  this.endPointBounce = function (lines){
+  this.endPointBounce = function (point){
+    let p = point
+    pc = {x: p.x, y: p.y, r: this.d/2}
+    dot = {x: this.location.x, y:this.location.y, angle: this.angle* (180 / PI)}
 
-    console.log(p)
-    let m = {x:this.location.x, y: this.location.y}
+    diffY = dot.y-pc.y
+    diffX = dot.x-pc.x
 
-    let thisAngleDeg = this.angle* (180 / PI);
-    let impactAngle = atan((p.y-m.y)/(p.x-m.x))* (180 / PI)
-    // console.log(impactAngle)
+    angleOfColl = atan2(diffY, diffX)*-1* (180 / PI)
 
-    let reverseIA = thisAngleDeg -181
-    console.log(thisAngleDeg)
+    diffAngle = ((dot.angle-180) - angleOfColl)*2
+    console.log(diffAngle)
+    newAngleinRad = (dot.angle-180 - diffAngle)* (PI / 180)
 
-    let newAngle = reverseIA
-    // console.log(thisAngleDeg)
+    // console.log(newAngleinRad)
+    this.angle = newAngleinRad
+    this.speed = this.speed+0.02
 
-    // console.log(newAngle)
 
-    let newAngleRad = newAngle * (Math.PI / 180)
-    // console.log(newAngleRad)
 
-    // console.log(newAngle)
-    // let newAngle = thisAngleDeg + 172
-    // let newAngleRad = newAngle * (Math.PI / 180)
-    this.angle = newAngleRad;
-    this.speed = this.speed+1;
 
   }
 
@@ -127,18 +122,15 @@ function redMonster(id){
   this.collideWithLine = function(){
     collidingLines =this.lineCollideCheck()
     collidingLineEnd =this.lineEndCollideCheck()
-    if (collidingLines) {
+    if (collidingLines.length>0) {
       collidingLines.forEach((line) => {
         this.bounce(line)
       })
       return
     } else if (collidingLineEnd) {
-      collidingLines.forEach((line) => {
-        this.endPointBounce(line)
-      })
-
+        this.endPointBounce(collidingLineEnd)
     } else {
-      // redMonsterColor = color(255,0,0)
+      //DO NOTHING
     }
   }
 
@@ -198,7 +190,6 @@ redMonster.prototype.lineEndCollideCheck = function(obj){
   let point
   let lines
   let endPointCollides
-  let linesToReturn =[]
 
   lines = allLines
   for (var i = 0; i < lines.length; i++){
@@ -212,13 +203,13 @@ redMonster.prototype.lineEndCollideCheck = function(obj){
 
     endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.d/2
     if (endPointCollides) {
-      linesToReturn.push(l)
+
+      return point
 
     } else {
       //DO NOTHING
     }
   }
-  return linesToReturn
 
 }
 redMonster.prototype.lineCollideCheck = function(obj){

@@ -122,24 +122,28 @@ function startSquare(){
 
     }
   }
-  for (var i = 0; i<5; i++){
-    for (var j = 0; j<5; j++){
+  // for (var i = 0; i<5; i++){
+  //   for (var j = 0; j<5; j++){
+  //
+  //     grid[i][0].on = true;
+  //     grid[i][5].on = true;
+  //     grid[5][j].on = true;
+  //     grid[0][j].on = true;
+  //
+  //   }
+  // }
+  //
+  // grid[1][1].on = true;
 
-      grid[i][0].on = true;
-      grid[i][5].on = true;
-      grid[5][j].on = true;
-      grid[0][j].on = true;
 
-    }
-  }
-
-  grid[1][1].on = true;
-
-
+      grid[10][1].on = true;
       grid[9][1].on = true;
       grid[18][9].on = true;
+      grid[18][10].on = true;
       grid[9][18].on = true;
+      grid[10][18].on = true;
       grid[1][9].on = true;
+      grid[1][10].on = true;
 
       grid[9][9].on = true;
       grid[9][10].on = true;
