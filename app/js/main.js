@@ -26,6 +26,8 @@ var bouncers = []
 var eaters = []
 var lineSteppers = []
 
+var monsters = []
+
 var allSquares = 0
 var redMonsterColor
 var pxPurple
@@ -39,42 +41,36 @@ function setup(){
   // frameRate(5)
 
   createCanvas(401,401,)
-   redMonsterColor = color(255,0,0)
-   pxPurple = color(255,0,255)
+  redMonsterColor = color(255,0,0)
+  pxPurple = color(255,0,255)
 
 
   grid = Make2DArray(rows, cols)
-  gridTEST = Make2DArray(rows2, cols2)
 
-    for (var i = 0; i<grid.length; i++){
-      for (var j = 0; j<grid[i].length; j++){
-        grid[i][j] = new Cell(i,j)
-      }
+  for (var i = 0; i<grid.length; i++){
+    for (var j = 0; j<grid[i].length; j++){
+      grid[i][j] = new Cell(i,j)
     }
-    startSquare()
+  }
+  startSquare()
 
-    initLineChecks()
-
-
-    // gridTEST[0][0] = new CellTEST(0,0)
-
-
+  initLineChecks()
 
   allSquares = (rows-2)*(cols-2)
 
   pacman = new Pac()
 
   for (var i = 0; i<bouncersNr; i++){
-    bouncers[i] = new Bouncer(i)
+    bouncers.push(new Bouncer(i))
   }
 
   for (var i = 0; i<eatersNr; i++){
-    eaters[i] = new Eater(i)
+    eaters.push(new Eater(i))
   }
 
 
   for (var i = 0; i<lineStepperNr; i++){
-    // lineSteppers[i] = new lineStepper(i)
+    // monsters.push(new lineStepper(i))
   }
 
 }
@@ -83,25 +79,14 @@ function setup(){
 
 
 function draw(){
-  // console.log("frame nr:", frame)
-  // frame++
+
   background(180)
+
   for (var i = 0; i<grid.length; i++){
     for (var j = 0; j<grid[i].length; j++){
       grid[i][j].show();
     }
   }
-
-  for (var j = 0; j<lines.length; j++){
-    // lines[j].show();
-    // console.log(j)
-  }
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
-      // grid[i][j].showLine()
-    }
-  }
-
 
   allLines.forEach((data) => {
     lineShow(data.x1, data.y1, data.x2, data.y2)
@@ -111,15 +96,17 @@ function draw(){
 
   for (var i = 0; i<bouncersNr; i++){
     bouncers[i].show()
-    bouncers[i].collide()
-    bouncers[i].collideWithLine()
+    bouncers[i].collideWithRoute()
+    bouncers[i].collideWithMonster()
+    bouncers[i].collideWithBorder()
     bouncers[i].walk()
   }
 
   for (var i = 0; i<eatersNr; i++){
     eaters[i].show()
-    eaters[i].collide()
-    eaters[i].collideWithLine()
+    eaters[i].collideWithRoute()
+    eaters[i].collideWithMonster()
+    eaters[i].collideWithBorder()
     eaters[i].walk()
   }
   //
@@ -131,21 +118,8 @@ function draw(){
   pacman.move()
   pacman.moveAni()
   pacman.take()
-  // for (var i = 0; i<gridTEST.length; i++){
-  //   for (var j = 0; j<gridTEST[i].length; j++){
-  //     // grid[i][j].showLine()
-  //     gridTEST[i][j].showLine()
-  //
-  //
-  //   }
-  // }
 
-
-
-
-  // initLineChecks()
-
-  text(calcPercent(), 10,10)
+  text(calcPercent(), 384,15)
 
   if(winPercent>=80){ text("CONGRATULATIONS, YOU ARE VERY GOOD PACXON PLAYER", 10,40) }
 }
@@ -162,18 +136,16 @@ function die(){
   pacman.prevX=w/2
   pacman.prevY=w/2
 
-    takeArr=[]
-    pacman.direction=""
+  takeArr=[]
+  pacman.direction=""
 
-    for (var i = 0; i<grid.length; i++){
-      for (var j = 0; j<grid[i].length; j++){
+  for (var i = 0; i<grid.length; i++){
+    for (var j = 0; j<grid[i].length; j++){
       grid[i][j].takeRoute = false
       grid[i][j].on = false
     }
   }
   startSquare()
-
-
 }
 
 function calcPercent(){
@@ -185,7 +157,6 @@ function calcPercent(){
       }
     }
   }
-
   return winPercent = parseInt(onSquares / allSquares*100)
 }
 
