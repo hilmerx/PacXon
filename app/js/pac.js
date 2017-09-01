@@ -1,8 +1,9 @@
 function Pac(){
   this.x = w/2
   this.y = w/2
-  this.aniX = w/2
-  this.aniY = w/2
+  // this.y = w*5+w/2
+  this.aniX = this.x
+  this.aniY = this.y
   this.alive = true
   this.direction = ""
   this.lastDirection = ""
@@ -165,7 +166,7 @@ function keyPressed(){
 
       pacman.direction="down"
       pacman.lastDirection = pacman.direction
-      
+
     }
   }
 }

@@ -22,6 +22,8 @@ function Cell(x,y){
   this.activeLines = []
   this.linesPushed = false
 
+
+
   this.showLine = function(){
     let line
     for (var i = 0; i<this.activeLines.length; i++){
@@ -289,5 +291,4 @@ function emptyRoute(){
       grid[i][j].takeRoute = false;
     }
   }
-
 }

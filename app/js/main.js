@@ -20,7 +20,7 @@ var speedCounter = 0
 
 var bouncersNr = 3
 var eatersNr = 1
-var lineStepperNr =  1
+var lineStepperNr =  0
 
 var bouncers = []
 var eaters = []
@@ -104,7 +104,7 @@ function draw(){
 
 
   allLines.forEach((data) => {
-    bouncers[0].lineShow(data.x1, data.y1, data.x2, data.y2)
+    lineShow(data.x1, data.y1, data.x2, data.y2)
   })
 
   pacman.show()
@@ -292,4 +292,11 @@ function lineNeighbors(){
 
   lines = []
   return newLines
+}
+
+function lineShow(x1, y1, x2, y2){
+  // console.log(x1)
+  stroke(255,0,255);
+  fill(255,255,0);
+  line(x1, y1, x2, y2)
 }

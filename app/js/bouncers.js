@@ -11,8 +11,8 @@ function Bouncer(id){
   this.mass = 10
 
   // this.angle = 3*PI/2
-  this.angle = (180-45)*random() * (Math.PI / 180);
-  // this.angle = 90 * (Math.PI / 180);
+  // this.angle = (180-45)*random() * (Math.PI / 180);
+  this.angle = 90 * (Math.PI / 180);
   // this.angle = 180 * (Math.PI / 180)
 
   this.v = new p5.Vector(0,1);
