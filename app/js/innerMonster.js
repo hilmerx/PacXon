@@ -14,44 +14,57 @@ function innerMonster(id){
   }
 
   this.collideWithRoute = function(){
-    if (takeArr.length > 0){
+    if (tail.arr.length > 0){
       for (var i = 0; i<grid.length; i++){
         for (var j = 0; j<grid[i].length; j++){
-          if(grid[i][j].takeRoute && this.squareCollide(i,j)){
-            die()
+          if(grid[i][j].tail && this.squareCollide(i,j)){
+            // die()
+            tail.waveInit(i,j)
+
           }
         }
       }
     }
   }
 
+  this.collideWithPacman = function(){
+    if (dist(pacman.aniX, pacman.aniY, this.location.x, this.location.y)<(pacman.r+this.r)) {
+      die()
+    }
+  }
+
+
   this.collideWithMonster = function() {
 
-    monsters = bouncers.concat(eaters)
+    for (var i = 0; i<monsters.length; i++){
+      for (var j = 0; j<monsters[i].length; j++){
+        let monster = monsters[i][j]
+        if(dist(this.location.x, this.location.y, monster.location.x, monster.location.y)<(this.r+monster.r) && monster.id+1 !== this.id+1){
 
-    for (var i = 0; i<bouncers.length; i++){
-      if(dist(this.location.x, this.location.y, monsters[i].location.x, monsters[i].location.y)<this.r*2 && i !==){
+          let second = monster
 
-        let second = bouncers[i]
+          thisSpeedX = Math.cos(this.angle)*this.speed
+          thisSpeedY = Math.sin(this.angle)*this.speed
+          secondSpeedX = Math.cos(second.angle)*second.speed
+          secondSpeedY = Math.sin(second.angle)*second.speed
 
-        thisSpeedX = Math.cos(this.angle)*this.speed
-        thisSpeedY = Math.sin(this.angle)*this.speed
-        secondSpeedX = Math.cos(second.angle)*second.speed
-        secondSpeedY = Math.sin(second.angle)*second.speed
+          thisNewX = (thisSpeedX * (this.mass - second.mass) + (2 * second.mass * secondSpeedX)) / (this.mass + second.mass)
+          thisNewY = (thisSpeedY * (this.mass - second.mass) + (2 * second.mass * secondSpeedY)) / (this.mass + second.mass)
+          secondNewX = (secondSpeedX * (second.mass - this.mass) + (2 * this.mass * thisSpeedX)) / (this.mass + second.mass)
+          secondNewY = (secondSpeedY * (second.mass - this.mass) + (2 * this.mass * thisSpeedY)) / (this.mass + second.mass)
 
-        thisNewX = (thisSpeedX * (this.mass - second.mass) + (2 * second.mass * secondSpeedX)) / (this.mass + second.mass)
-        thisNewY = (thisSpeedY * (this.mass - second.mass) + (2 * second.mass * secondSpeedY)) / (this.mass + second.mass)
-        secondNewX = (secondSpeedX * (second.mass - this.mass) + (2 * this.mass * thisSpeedX)) / (this.mass + second.mass)
-        secondNewY = (secondSpeedY * (second.mass - this.mass) + (2 * this.mass * thisSpeedY)) / (this.mass + second.mass)
+          this.angle = atan2(thisNewY, thisNewX)
+          this.speed = dist(0,0,thisNewX,thisNewY)
 
-        this.angle = atan2(thisNewY, thisNewX)
-        this.speed = dist(0,0,thisNewX,thisNewY)
-        this.walk()
+          this.walk()
 
-        bouncers[i].angle = atan2(secondNewY, secondNewX)
-        bouncers[i].speed = dist(0,0,secondNewX,secondNewY)
+          monster.angle = atan2(secondNewY, secondNewX)
+          monster.speed = dist(0,0,secondNewX,secondNewY)
 
-        bouncers[i].walk()
+          monster.walk()
+          return true
+
+        }
       }
     }
   }
@@ -83,7 +96,6 @@ function innerMonster(id){
     angleOfColl = atan2(diffY, diffX)*-1* (180 / PI)
 
     diffAngle = ((dot.angle-180) - angleOfColl)*2
-    console.log(diffAngle)
     newAngleinRad = (dot.angle-180 - diffAngle)* (PI / 180)
 
     // console.log(newAngleinRad)
@@ -107,6 +119,7 @@ function innerMonster(id){
 
     return (dx*dx+dy*dy<=(this.r*this.r));
   }
+
 
   this.lineEndCollideCheck = function(obj){
 

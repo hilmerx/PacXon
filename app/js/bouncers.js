@@ -1,10 +1,13 @@
 function Bouncer(id){
   this.id = id
-  this.location = new p5.Vector(60, 30*(id+1));
+  this.location = new p5.Vector(30*(id+1), 30);
+  // this.location = new p5.Vector(100,150)
   this.d = 16
   this.r = 8
   this.mass = 10
-  this.angle = 90 * (Math.PI / 180);
+  // this.angle = 0 * (Math.PI / 180);
+  this.angle = (180+90)*Math.random()* (Math.PI / 180);
+
   this.origSpeed = 2
   this.speed = this.origSpeed
   this.color = color(150,200,0,200)
