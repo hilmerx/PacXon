@@ -1,16 +1,19 @@
 function Eater(id){
 
   this.id = id
-  this.location = new p5.Vector(50*(id+1), 150)
-  // this.location = new p5.Vector(70,110)
+  // this.location = new p5.Vector(82, 50*(id+1)+50)
+  this.location = new p5.Vector(250,110)
 
   this.r = 9.5
   this.mass = 50
   // this.angle = (180-45)*random() * (Math.PI / 180);
-  this.angle = (170) * (Math.PI / 180);
+  this.angle = (180) * (Math.PI / 180);
   this.origSpeed = 0.8
   this.speed = this.origSpeed
   this.color = color(255,0,0)
+  this.speedTemp = this.speed
+  this.angleTemp = this.angle
+
 
   this.collideWithBorder = function(){
     collidingLines =this.lineCollideCheck()
@@ -37,7 +40,6 @@ function Eater(id){
           grid[i][j].on = false
           initLineChecks()
           if (grid[i][j].x2 === pacman.x && grid[i][j].y2 === pacman.y) {
-            console.log("FLYYYY")
             pacman.direction = pacman.lastDirection
             pacman.flying = true;
           }

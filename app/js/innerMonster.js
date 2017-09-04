@@ -1,5 +1,6 @@
 function innerMonster(id){
 
+
   this.show = function(){
     fill(this.color)
     ellipseMode(CENTER);
@@ -34,6 +35,14 @@ function innerMonster(id){
   }
 
 
+  this.setPostCollSpeedAngle = function() {
+    if (this.collMonster === true) {
+      this.speed = this.speedTemp
+      this.angle = this.angleTemp
+      this.collMonster = false
+    }
+  }
+
   this.collideWithMonster = function() {
 
     for (var i = 0; i<monsters.length; i++){
@@ -42,7 +51,6 @@ function innerMonster(id){
         if(dist(this.location.x, this.location.y, monster.location.x, monster.location.y)<(this.r+monster.r) && monster.id+1 !== this.id+1){
 
           let second = monster
-
           thisSpeedX = Math.cos(this.angle)*this.speed
           thisSpeedY = Math.sin(this.angle)*this.speed
           secondSpeedX = Math.cos(second.angle)*second.speed
@@ -53,23 +61,23 @@ function innerMonster(id){
           secondNewX = (secondSpeedX * (second.mass - this.mass) + (2 * this.mass * thisSpeedX)) / (this.mass + second.mass)
           secondNewY = (secondSpeedY * (second.mass - this.mass) + (2 * this.mass * thisSpeedY)) / (this.mass + second.mass)
 
-          this.angle = atan2(thisNewY, thisNewX)
-          this.speed = dist(0,0,thisNewX,thisNewY)
+          this.collMonster = true
+          this.angleTemp = atan2(thisNewY, thisNewX)
+          this.speedTemp = dist(0,0,thisNewX,thisNewY)
+          // this.walk()
 
-          this.walk()
+          // monster.angle = atan2(secondNewY, secondNewX)
+          // monster.speed = dist(0,0,secondNewX,secondNewY)
 
-          monster.angle = atan2(secondNewY, secondNewX)
-          monster.speed = dist(0,0,secondNewX,secondNewY)
-
-          monster.walk()
-          return true
-
+          // monster.walk()
+          return
         }
       }
     }
   }
 
   this.bounce = function (line){
+    console.log(line)
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
     let linePerpVector = new p5.Vector(1,linePerpSlope)
@@ -81,8 +89,8 @@ function innerMonster(id){
     let newAngleDiff = (thisAngleDeg - linePerpDeg)*2
     let newAngle = (thisAngleDeg - newAngleDiff)+180
     let newAngleRad = newAngle * (Math.PI / 180)
-    this.angle = newAngleRad+0.02
-    this.speed = this.speed+0.02
+    this.angle = newAngleRad
+    this.speed = this.speed
   }
 
   this.endPointBounce = function (point){
@@ -100,7 +108,7 @@ function innerMonster(id){
 
     // console.log(newAngleinRad)
     this.angle = newAngleinRad
-    this.speed = this.speed+0.02
+    this.speed = this.speed
   }
 
   this.squareCollide = function(i,j){

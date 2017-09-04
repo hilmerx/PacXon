@@ -132,16 +132,16 @@ function startSquare(){
   }
 
   // for (var i = 0; i<5; i++){
-  //   for (var j = 0; j<5; j++){
+  //   for (var j = 0; j<6; j++){
   //
   //     grid[i][0].on = true;
-  //     grid[i][5].on = true;
-  //     grid[5][j].on = true;
+  //     grid[i][4].on = true;
+  //     grid[4][j].on = true;
   //     grid[0][j].on = true;
   //
   //   }
   // }
-  //
+
   // grid[1][1].on = true;
 
 

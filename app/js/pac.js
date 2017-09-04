@@ -73,8 +73,8 @@ Pac.prototype.show = function(){
   fill(255,255,0)
   ellipseMode(CENTER);
   ellipse(this.aniX, this.aniY, this.r*2, this.r*2)
-  fill(255,0,0)
-  ellipse(this.x, this.y, 5, 5)
+  // fill(255,0,0)
+  // ellipse(this.x, this.y, 5, 5)
 }
 
 

@@ -18,8 +18,8 @@ var w = 20
 var speed = 6
 var speedCounter = 0
 
-var bouncersNr = 2
-var eatersNr = 3
+var bouncersNr = 1
+var eatersNr = 1
 var lineStepperNr =  0
 
 var bouncers = []
@@ -85,6 +85,9 @@ function setup(){
 
 function draw(){
 
+  // console.log(frame)
+  frame++
+
   background(20)
 
   tail.show()
@@ -107,16 +110,26 @@ function draw(){
       currentMonster.show()
       currentMonster.collideWithRoute()
       currentMonster.collideWithBorder()
-      if(currentMonster.collideWithMonster()){
-        //DO NOTHING
-      } else {
-        currentMonster.walk()
-      }
-
+      currentMonster.walk()
       currentMonster.collideWithPacman()
 
     }
   }
+
+    for (var i = 0; i<monsters.length; i++){
+      for (var j = 0; j<monsters[i].length; j++){
+        currentMonster = monsters[i][j]
+        currentMonster.collideWithMonster()
+      }
+    }
+
+    for (var i = 0; i<monsters.length; i++){
+      for (var j = 0; j<monsters[i].length; j++){
+        currentMonster = monsters[i][j]
+        currentMonster.setPostCollSpeedAngle()
+      }
+    }
+
   //
   // for (var i = 0; i<lineStepperNr; i++){
   //   lineSteppers[i].show()
