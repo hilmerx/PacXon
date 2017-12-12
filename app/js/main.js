@@ -6,8 +6,8 @@ let w = 20
 let speed = 6
 let speedCounter = 0
 
-let bouncersNr = 1
-let eatersNr = 0
+let bouncersNr = 3
+let eatersNr = 3
 let lineStepperNr =  0
 
 let bouncers = []
@@ -61,7 +61,7 @@ function setup(){
 
 
 function draw(){
-    
+
     frame++
     background(20)
 
