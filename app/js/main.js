@@ -1,149 +1,115 @@
+let rows = 20
+let cols = 20
+let rows2 = 1
+let cols2 = 1
+let w = 20
+let speed = 6
+let speedCounter = 0
 
-function Make2DArray(rows, cols) {
+let bouncersNr = 3
+let eatersNr = 3
+let lineStepperNr =  0
 
-  var arr = new Array(rows)
-  for (var i = 0; i<arr.length; i++){
-    arr[i] = new Array(cols)
-  }
+let bouncers = []
+let eaters = []
+let lineSteppers = []
 
-  return arr
-}
-
-
-var rows = 20
-var cols = 20
-var rows2 = 1
-var cols2 = 1
-var w = 20
-var speed = 6
-var speedCounter = 0
-
-var bouncersNr = 3
-var eatersNr = 3
-var lineStepperNr =  0
-
-var bouncers = []
-var eaters = []
-var lineSteppers = []
-
-var monsters = []
+let monsters = []
 let currentMonster
 
-var allSquares = 0
-var redMonsterColor
-var pxPurple
-var grid
-var tail
-var pacman;
-var lines = []
-var allLines = []
+let allSquares = 0
+let redMonsterColor
+let pxPurple
+let grid
+let tail
+let pacman;
+let lines = []
+let allLines = []
 let frame = 0
 
 function setup(){
-  // frameRate(50)
+    createCanvas((rows*w)+1,(cols*w)+1)
+    redMonsterColor = color(255,0,0)
+    pxPurple = color(255,0,255)
+    grid = Make2DArray(rows, cols)
 
-  createCanvas((rows*w)+1,(cols*w)+1)
-  redMonsterColor = color(255,0,0)
-  pxPurple = color(255,0,255)
-
-
-  grid = Make2DArray(rows, cols)
-
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
-      grid[i][j] = new Cell(i,j)
+    for (let i = 0; i<grid.length; i++){
+        for (let j = 0; j<grid[i].length; j++){
+            grid[i][j] = new Cell(i,j)
+        }
     }
-  }
-  tail = new Tail()
 
-  startSquare()
+    tail = new Tail()
+    startSquare()
+    initLineChecks()
+    allSquares = (rows-2)*(cols-2)
+    pacman = new Pac()
 
-  initLineChecks()
+    for (let i = 0; i<bouncersNr; i++){
+        bouncers.push(new Bouncer(i))
+    }
+    monsters.push(bouncers)
 
-  allSquares = (rows-2)*(cols-2)
+    for (let i = 0; i<eatersNr; i++){
+        eaters.push(new Eater(i+(bouncersNr)))
+    }
 
-  pacman = new Pac()
-
-  for (var i = 0; i<bouncersNr; i++){
-    bouncers.push(new Bouncer(i))
-  }
-  monsters.push(bouncers)
-
-  for (var i = 0; i<eatersNr; i++){
-    eaters.push(new Eater(i+(bouncersNr)))
-  }
-  monsters.push(eaters)
-
-  for (var i = 0; i<lineStepperNr; i++){
-    // monsters.push(new lineStepper(i))
-  }
-
+    monsters.push(eaters)
 }
 
 
 
 
 function draw(){
+    frame++
+    background(20)
 
-  // console.log(frame)
-  frame++
-
-  background(20)
-
-  tail.show()
-  tail.wave()
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
-      grid[i][j].show()
+    tail.show()
+    tail.wave()
+    for (let i = 0; i<grid.length; i++){
+        for (let j = 0; j<grid[i].length; j++){
+            grid[i][j].show()
+        }
     }
-  }
-  allLines.forEach((data) => {
-    lineShow(data.x1, data.y1, data.x2, data.y2)
-  })
+    allLines.forEach((data) => {
+        lineShow(data.x1, data.y1, data.x2, data.y2)
+    })
+    pacman.show()
 
-  pacman.show()
+    for (let i = 0; i<monsters.length; i++){
+        for (let j = 0; j<monsters[i].length; j++){
+            currentMonster = monsters[i][j]
+            currentMonster.show()
+            currentMonster.collideWithRoute()
+            currentMonster.collideWithBorder()
+            currentMonster.walk()
+            currentMonster.collideWithPacman()
 
-  for (var i = 0; i<monsters.length; i++){
-    for (var j = 0; j<monsters[i].length; j++){
-      currentMonster = monsters[i][j]
-
-      currentMonster.show()
-      currentMonster.collideWithRoute()
-      currentMonster.collideWithBorder()
-      currentMonster.walk()
-      currentMonster.collideWithPacman()
-
-    }
-  }
-
-    for (var i = 0; i<monsters.length; i++){
-      for (var j = 0; j<monsters[i].length; j++){
-        currentMonster = monsters[i][j]
-        currentMonster.collideWithMonster()
-      }
+        }
     }
 
-    for (var i = 0; i<monsters.length; i++){
-      for (var j = 0; j<monsters[i].length; j++){
-        currentMonster = monsters[i][j]
-        currentMonster.setPostCollSpeedAngle()
-      }
+    for (let i = 0; i<monsters.length; i++){
+        for (let j = 0; j<monsters[i].length; j++){
+            currentMonster = monsters[i][j]
+            currentMonster.collideWithMonster()
+        }
     }
 
-  //
-  // for (var i = 0; i<lineStepperNr; i++){
-  //   lineSteppers[i].show()
-  //   lineSteppers[i].walk()
-  // }
+    for (let i = 0; i<monsters.length; i++){
+        for (let j = 0; j<monsters[i].length; j++){
+            currentMonster = monsters[i][j]
+            currentMonster.setPostCollSpeedAngle()
+        }
+    }
 
-  pacman.move()
-  pacman.moveAni()
-  pacman.take()
+    pacman.move()
+    pacman.moveAni()
+    pacman.take()
 
 
-  text(calcPercent(), 384,15)
+    text(calcPercent(), 384,15)
 
-  if(winPercent>=80){ text("CONGRATULATIONS, YOU ARE VERY GOOD PACXON PLAYER", 10,40) }
+    if(winPercent>=70){ text("CONGRATULATIONS, YOU ARE VERY GOOD PACXON PLAYER", 10,40) }
 }
 
 
@@ -151,150 +117,157 @@ function draw(){
 
 
 function die(){
-  pacman.x=w/2
-  pacman.y=w/2
-  pacman.aniX=w/2
-  pacman.aniY=w/2
-  pacman.prevX=w/2
-  pacman.prevY=w/2
-  tail.waveInitArr=[]
+    pacman.x = w/2
+    pacman.y = w/2
+    pacman.aniX = w/2
+    pacman.aniY = w/2
+    pacman.prevX = w/2
+    pacman.prevY = w/2
+    tail.waveInitArr = []
 
-  tail.arr=[]
-  pacman.direction=""
+    tail.arr=[]
+    pacman.direction=""
 
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
-      grid[i][j].tail = false
-      grid[i][j].on = false
-      grid[i][j].activeLines = []
+    for (let i = 0; i<grid.length; i++){
+        for (let j = 0; j<grid[i].length; j++){
+            grid[i][j].tail = false
+            grid[i][j].on = false
+            grid[i][j].activeLines = []
+        }
     }
-  }
-  startSquare()
-  initLineChecks()
+    startSquare()
+    initLineChecks()
 }
 
 function calcPercent(){
-  var onSquares = 0;
-  for (var i = 1; i<grid.length-1; i++){
-    for (var j = 1; j<grid[i].length-1; j++){
-      if(grid[i][j].on){
-        onSquares++
-      }
+    let onSquares = 0;
+    for (let i = 1; i<grid.length-1; i++){
+        for (let j = 1; j<grid[i].length-1; j++){
+            if(grid[i][j].on){
+                onSquares++
+            }
+        }
     }
-  }
-  return winPercent = parseInt(onSquares / allSquares*100)
+    return winPercent = parseInt(onSquares / allSquares*100)
 }
 
 function initLineChecks() {
-  for (var i = 0; i<grid.length; i++){
-    for (var j = 0; j<grid[i].length; j++){
-      if (grid[i][j].on === true || grid[i][j].tail === true){
-        grid[i][j].lineCheck()
-      }
+    for (let i = 0; i < grid.length; i++){
+        for (let j = 0; j < grid[i].length; j++){
+            if (grid[i][j].on === true || grid[i][j].tail === true){
+                grid[i][j].lineCheck()
+            }
+        }
     }
-  }
-  for (var j = 0; j<cols; j++){
-    for (var i = 0; i<rows; i++){
-      if (grid[i][j].activeLines.length>0){
-        grid[i][j].lineConsolidation()
-        grid[i][j].activeLines = []
+    for (let j = 0; j < cols; j++){
+        for (let i = 0; i < rows; i++){
+            if (grid[i][j].activeLines.length > 0){
+                grid[i][j].lineConsolidation()
+                grid[i][j].activeLines = []
 
-      }
+            }
+        }
     }
-  }
-  allLines = lineNeighbors()
+    allLines = lineNeighbors()
 }
 
 function lineNeighbors(){
-  let linesY = []
-  let linesX = []
-  let newLines = []
+    let linesY = []
+    let linesX = []
+    let newLines = []
 
-  let y
-  let smallestX
-  let lastItem
-  let largestX
-  let newLine
-  let mult
+    let y
+    let smallestX
+    let lastItem
+    let largestX
+    let newLine
+    let mult
 
-  for (var i = 0; i<lines.length; i++){
-    lines[i].checked = false
-  }
-
-  for (var i = 0; i<lines.length; i++){
-    let l1 = lines[i]
-    if (l1.y1 === l1.y2) {
-      mult = 1
-      for (var j = 0; j<lines.length; j++){
-        let l2 = lines[j]
-        if (l1.y1 === l2.y1 && l1.y2 === l2.y2 && l2.checked === false && i !== j && l1.x1 === l2.x1-w*mult){
-          // console.log(l2)
-          linesY.push(l2)
-          lines[j].checked = true
-          mult++
-        }
-      }
-
-      if (linesY.length>0){
-        y = l1.y1
-        smallestX = l1.x1
-        lastItem = linesY.length-1
-        largestX = linesY[lastItem].x2
-        newLine = {pos: l1.pos, x1: smallestX ,y1: y , x2: largestX, y2: y}
-        newLines.push(newLine)
-        lines[i].checked = true
-        linesY = []
-      } else if (linesY.length===0 && lines[i].checked === false) {
-        // console.log("hje")
-        y = l1.y1
-        smallestX = l1.x1
-        largestX = l1.x2
-        newLine = {pos: l1.pos, x1: smallestX ,y1: y , x2: largestX, y2: y}
-        newLines.push(newLine)
-      }
+    for (let i = 0; i < lines.length; i++){
+        lines[i].checked = false
     }
 
-    if (l1.x1 === l1.x2) {
-      mult = 1
-      for (var j = 0; j<lines.length; j++){
-        let l2 = lines[j]
-        if (l1.x1 === l2.x1 && l1.x2 === l2.x2 && l2.checked === false && i !== j && l1.y1 === l2.y1-w*mult){
-          // console.log(l2)
-          linesX.push(l2)
-          lines[j].checked = true
-          mult++
-        }
-      }
+    for (let i = 0; i<lines.length; i++){
+        let l1 = lines[i]
+        if (l1.y1 === l1.y2) {
+            mult = 1
+            for (let j = 0; j < lines.length; j++){
+                let l2 = lines[j]
+                if (l1.y1 === l2.y1 && l1.y2 === l2.y2 && l2.checked === false && i !== j && l1.x1 === l2.x1-w*mult) {
+                    linesY.push(l2)
+                    lines[j].checked = true
+                    mult++
+                }
+            }
 
-      if (linesX.length>0){
-        x = l1.x1
-        smallestY = l1.y1
-        lastItem = linesX.length-1
-        largestY = linesX[lastItem].y2
-        newLine = {pos: l1.pos, x1: x ,y1: smallestY , x2: x, y2: largestY}
-        newLines.push(newLine)
+            if (linesY.length > 0){
+                y = l1.y1
+                smallestX = l1.x1
+                lastItem = linesY.length-1
+                largestX = linesY[lastItem].x2
+                newLine = {pos: l1.pos, x1: smallestX ,y1: y , x2: largestX, y2: y}
+                newLines.push(newLine)
+                lines[i].checked = true
+                linesY = []
+            } else if (linesY.length===0 && lines[i].checked === false) {
+                y = l1.y1
+                smallestX = l1.x1
+                largestX = l1.x2
+                newLine = {pos: l1.pos, x1: smallestX ,y1: y , x2: largestX, y2: y}
+                newLines.push(newLine)
+            }
+        }
+
+        if (l1.x1 === l1.x2) {
+            mult = 1
+            for (let j = 0; j<lines.length; j++){
+                let l2 = lines[j]
+                if (l1.x1 === l2.x1 && l1.x2 === l2.x2 && l2.checked === false && i !== j && l1.y1 === l2.y1-w*mult){
+                    linesX.push(l2)
+                    lines[j].checked = true
+                    mult++
+                }
+            }
+
+            if (linesX.length>0){
+                x = l1.x1
+                smallestY = l1.y1
+                lastItem = linesX.length-1
+                largestY = linesX[lastItem].y2
+                newLine = {pos: l1.pos, x1: x ,y1: smallestY , x2: x, y2: largestY}
+                newLines.push(newLine)
+                lines[i].checked = true
+                linesX = []
+            } else if (linesX.length===0 && lines[i].checked === false) {
+                x = l1.x1
+                smallestY = l1.y1
+                largestY = l1.y2
+                newLine = {pos: l1.pos, x1: x ,y1: smallestY , x2: x, y2: largestY}
+                newLines.push(newLine)
+            }
+        }
+
         lines[i].checked = true
-        linesX = []
-      } else if (linesX.length===0 && lines[i].checked === false) {
-        x = l1.x1
-        smallestY = l1.y1
-        largestY = l1.y2
-        newLine = {pos: l1.pos, x1: x ,y1: smallestY , x2: x, y2: largestY}
-        newLines.push(newLine)
-      }
+
     }
 
-    lines[i].checked = true
-
-  }
-
-  lines = []
-  return newLines
+    lines = []
+    return newLines
 }
 
 function lineShow(x1, y1, x2, y2){
-  // console.log(x1)
-  stroke(255,0,255);
-  fill(255,255,0);
-  line(x1, y1, x2, y2)
+    stroke(255,0,255);
+    fill(255,255,0);
+    line(x1, y1, x2, y2)
+}
+
+
+function Make2DArray(rows, cols) {
+
+    let arr = new Array(rows)
+    for (let i = 0; i<arr.length; i++){
+        arr[i] = new Array(cols)
+    }
+
+    return arr
 }

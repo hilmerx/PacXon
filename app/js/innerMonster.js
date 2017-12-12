@@ -1,5 +1,4 @@
-function innerMonster(id){
-
+function innerMonster(id) {
 
   this.show = function(){
     fill(this.color)
@@ -16,12 +15,10 @@ function innerMonster(id){
 
   this.collideWithRoute = function(){
     if (tail.arr.length > 0){
-      for (var i = 0; i<grid.length; i++){
-        for (var j = 0; j<grid[i].length; j++){
+      for (let i = 0; i<grid.length; i++){
+        for (let j = 0; j<grid[i].length; j++){
           if(grid[i][j].tail && this.squareCollide(i,j)){
-            // die()
             tail.waveInit(i,j)
-
           }
         }
       }
@@ -45,8 +42,8 @@ function innerMonster(id){
 
   this.collideWithMonster = function() {
 
-    for (var i = 0; i<monsters.length; i++){
-      for (var j = 0; j<monsters[i].length; j++){
+    for (let i = 0; i<monsters.length; i++){
+      for (let j = 0; j<monsters[i].length; j++){
         let monster = monsters[i][j]
         if(dist(this.location.x, this.location.y, monster.location.x, monster.location.y)<(this.r+monster.r) && monster.id+1 !== this.id+1){
 
@@ -64,19 +61,14 @@ function innerMonster(id){
           this.collMonster = true
           this.angleTemp = atan2(thisNewY, thisNewX)
           this.speedTemp = dist(0,0,thisNewX,thisNewY)
-          // this.walk()
 
-          // monster.angle = atan2(secondNewY, secondNewX)
-          // monster.speed = dist(0,0,secondNewX,secondNewY)
-
-          // monster.walk()
           return
         }
       }
     }
   }
 
-  this.bounce = function (line){
+  this.bounce = function (line) {
     console.log(line)
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
@@ -93,7 +85,7 @@ function innerMonster(id){
     this.speed = this.speed
   }
 
-  this.endPointBounce = function (point){
+  this.endPointBounce = function (point) {
     let p = point
     pc = {x: p.x, y: p.y, r: this.r}
     dot = {x: this.location.x, y:this.location.y, angle: this.angle* (180 / PI)}
@@ -106,37 +98,36 @@ function innerMonster(id){
     diffAngle = ((dot.angle-180) - angleOfColl)*2
     newAngleinRad = (dot.angle-180 - diffAngle)* (PI / 180)
 
-    // console.log(newAngleinRad)
     this.angle = newAngleinRad
     this.speed = this.speed
   }
 
   this.squareCollide = function(i,j){
 
-    var distX = Math.abs(this.location.x - grid[i][j].x-w/2);
-    var distY = Math.abs(this.location.y - grid[i][j].y-w/2);
+    let distX = Math.abs(this.location.x - grid[i][j].x-w/2)
+    let distY = Math.abs(this.location.y - grid[i][j].y-w/2)
 
-    if (distX > (w/2 + this.r)) { return false; }
-    if (distY > (w/2 + this.r)) { return false; }
+    if (distX > (w/2 + this.r)) { return false }
+    if (distY > (w/2 + this.r)) { return false }
 
     if (distX <= (w/2)) { return true; }
     if (distY <= (w/2)) { return true; }
 
-    var dx=distX-w/2;
-    var dy=distY-w/2;
+    let dx=distX-w/2;
+    let dy=distY-w/2;
 
     return (dx*dx+dy*dy<=(this.r*this.r));
   }
 
 
-  this.lineEndCollideCheck = function(obj){
+  this.lineEndCollideCheck = function(obj) {
 
     let point
     let lines
     let endPointCollides
 
     lines = allLines
-    for (var i = 0; i < lines.length; i++){
+    for (let i = 0; i < lines.length; i++){
       let l = lines[i]
 
       if (dist(l.x1,l.y1, this.location.x,this.location.y) < dist(l.x2,l.y2, this.location.x,this.location.y)){
@@ -146,10 +137,9 @@ function innerMonster(id){
       }
 
       endPointCollides = dist(this.location.x, this.location.y, point.x, point.y)<this.r
+
       if (endPointCollides) {
-
         return point
-
       } else {
         //DO NOTHING
       }
@@ -178,8 +168,7 @@ function innerMonster(id){
     let isOnInfLine
     let linesToReturn =[]
 
-    for (var i = 0; i < lines.length; i++){
-      // console.log(i)
+    for (let i = 0; i < lines.length; i++){
       l = lines[i]
       lineLength = dist(l.x1,l.y1,l.x2,l.y2)
 
