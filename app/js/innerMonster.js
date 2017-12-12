@@ -69,7 +69,6 @@ function innerMonster(id) {
   }
 
   this.bounce = function (line) {
-    console.log(line)
     let lineSlope = (line.y2-line.y1)/(line.x2-line.x1)
     let linePerpSlope = -1/lineSlope
     let linePerpVector = new p5.Vector(1,linePerpSlope)

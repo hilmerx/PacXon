@@ -1,3 +1,4 @@
+
 function Pac(){
     this.x = 0 * w + w / 2
     this.y = w/2
@@ -6,6 +7,7 @@ function Pac(){
     this.alive = true
     this.direction = ""
     this.lastDirection = ""
+    this.keyIsPressed = false;
     this.tail = false
     this.flying = false
     this.aniSpeed = 4
@@ -14,33 +16,35 @@ function Pac(){
     this.r = 9
 
     this.move = function(input) {
-            switch (this.direction) {
-                case 'down': if(this.y<(cols*w)-w && this.aniY % this.y === 0 && this.aniX % this.x === 0){
-                    this.prevX = this.x
-                    this.prevY = this.y
-                    this.y = this.y + w;
 
-                }
-                    break;
-                case 'up': if(this.y>w/2 && this.aniY % this.y === 0 && this.aniX % this.x === 0){
-                    this.prevX = this.x
-                    this.prevY = this.y
-                    this.y = this.y - w;
-                }
-                    break;
-                case 'right': if (this.x<(rows*w)-w && this.aniX % this.x === 0 && this.aniY % this.y === 0) {
-                    this.prevY = this.y
-                    this.prevX = this.x
-                    this.x = this.x + w;
-                }
-                    break;
-                case 'left': if(this.x>w/2 && this.aniX % this.x === 0 && this.aniY % this.y === 0){
-                    this.prevY = this.y
-                    this.prevX = this.x
-                    this.x = this.x - w;
-                }
+                switch (this.direction) {
+                    case 'down': if(this.y<(cols*w)-w && this.aniY % this.y === 0 && this.aniX % this.x === 0){
+                        this.prevX = this.x
+                        this.prevY = this.y
+                        this.y = this.y + w;
+
+                    }
+                        break;
+                    case 'up': if(this.y>w/2 && this.aniY % this.y === 0 && this.aniX % this.x === 0){
+                        this.prevX = this.x
+                        this.prevY = this.y
+                        this.y = this.y - w;
+                    }
+                        break;
+                    case 'right': if (this.x<(rows*w)-w && this.aniX % this.x === 0 && this.aniY % this.y === 0) {
+                        this.prevY = this.y
+                        this.prevX = this.x
+                        this.x = this.x + w;
+                    }
+                        break;
+                    case 'left': if(this.x>w/2 && this.aniX % this.x === 0 && this.aniY % this.y === 0){
+                        this.prevY = this.y
+                        this.prevX = this.x
+                        this.x = this.x - w;
+                    }
                     break;
             }
+
     }
     this.moveAni = function(input) {
 
@@ -97,23 +101,23 @@ Pac.prototype.take = function(){
         for (let j = 0; j<cols;j++){
             if(pacman.x-w/2 === grid[i][j].x && pacman.y-w/2 === grid[i][j].y && grid[i][j].on === true && pacman.flying){
 
-            for (let k = 0; k<tail.arr.length;k++){
-                grid[tail.arr[k].x][tail.arr[k].y].on = true
-            }
+                for (let k = 0; k<tail.arr.length;k++){
+                    grid[tail.arr[k].x][tail.arr[k].y].on = true
+                }
 
-            checkFlood()
-            tail.arr = []
-            tail.waveInitArr = []
-            emptyRoute()
-            initLineChecks()
-            pacman.flying = false;
-
-            if (!keyIsPressed){
-                pacman.direction=""
+                checkFlood()
+                tail.arr = []
+                tail.waveInitArr = []
+                emptyRoute()
+                initLineChecks()
+                pacman.flying = false;
+                if (!this.keyIsPressed){
+                    console.log("hej");
+                    pacman.direction=""
+                }
             }
         }
     }
-}
 
 
     for (let i = 0; i < tail.arr.length - 1;i++){
@@ -124,14 +128,13 @@ Pac.prototype.take = function(){
 }
 
 
-let keyIsPressed = false
 
 function keyPressed() {
     if (keyCode === RIGHT_ARROW){
         if(pacman.flying && pacman.direction === "left") {
 
         }else {
-            keyIsPressed = true;
+            this.keyIsPressed = true;
             pacman.direction = "right"
             pacman.lastDirection = pacman.direction
         }
@@ -141,7 +144,7 @@ function keyPressed() {
         if(pacman.flying && pacman.direction === "right") {
 
         }else{
-            keyIsPressed = true;
+            this.keyIsPressed = true;
 
             pacman.direction = "left"
             pacman.lastDirection = pacman.direction
@@ -151,7 +154,7 @@ function keyPressed() {
         if(pacman.flying && pacman.direction==="down"){
 
         }else{
-            keyIsPressed = true;
+            this.keyIsPressed = true;
 
             pacman.direction = "up"
             pacman.lastDirection = pacman.direction
@@ -162,7 +165,7 @@ function keyPressed() {
         if(pacman.flying && pacman.direction === "up"){
 
         }else{
-            keyIsPressed = true
+            this.keyIsPressed = true
 
             pacman.direction = "down"
             pacman.lastDirection = pacman.direction
@@ -173,25 +176,25 @@ function keyPressed() {
 
 function keyReleased() {
     if (pacman.direction==="right" && keyCode===RIGHT_ARROW && !pacman.flying){
-        keyIsPressed=false
+        this.keyIsPressed=false
 
-        pacman.direction=""
+        pacman.direction = ""
 
     }
     else if (pacman.direction==="left" && keyCode===LEFT_ARROW && !pacman.flying){
-        keyIsPressed=false
+        this.keyIsPressed=false
 
         pacman.direction=""
 
     }
     else if (pacman.direction==="up" && keyCode===UP_ARROW && !pacman.flying){
-        keyIsPressed=false
+        this.keyIsPressed=false
 
         pacman.direction=""
 
     }
     else if (pacman.direction==="down" && keyCode===DOWN_ARROW && !pacman.flying){
-        keyIsPressed=false
+        this.keyIsPressed=false
 
         pacman.direction=""
     }
