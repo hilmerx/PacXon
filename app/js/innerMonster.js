@@ -26,7 +26,7 @@ function innerMonster(id) {
   }
 
   this.collideWithPacman = function(){
-    if (dist(pacman.aniX, pacman.aniY, this.location.x, this.location.y)<(pacman.r+this.r)) {
+    if (dist(pacman.aniX, pacman.aniY, this.location.x, this.location.y)<(pacman.r+this.r) && pacman.flying) {
       die()
     }
   }

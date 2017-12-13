@@ -3,3 +3,11 @@ body, html {
   padding: 0px;
   background-color: #222;
 }
+
+canvas {
+    position: relative;
+    display:block;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: auto;
+}

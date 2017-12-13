@@ -110,7 +110,7 @@ function draw(){
 
     text(calcPercent(), 384,15)
 
-    if(winPercent>=70){ text("CONGRATULATIONS, YOU ARE VERY GOOD PACXON PLAYER", 10,40) }
+    if(winPercent>=70){ text("CONGRATULATIONS! WELL DONE.", 10,40) }
 }
 
 
