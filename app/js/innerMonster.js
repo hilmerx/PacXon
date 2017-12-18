@@ -41,12 +41,13 @@ function innerMonster(id) {
   }
 
   this.collideWithMonster = function() {
-
+    // console.log(monsters);
     for (let i = 0; i<monsters.length; i++){
       for (let j = 0; j<monsters[i].length; j++){
         let monster = monsters[i][j]
+            // console.log("i'm", this, "other  monster is", monster);
         if(dist(this.location.x, this.location.y, monster.location.x, monster.location.y)<(this.r+monster.r) && monster.id+1 !== this.id+1){
-
+            console.log("hej");
           let second = monster
           thisSpeedX = Math.cos(this.angle)*this.speed
           thisSpeedY = Math.sin(this.angle)*this.speed

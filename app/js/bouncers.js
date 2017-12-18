@@ -6,7 +6,7 @@ function Bouncer(id) {
     this.mass = 10
     this.angleArr = [-90, -180]
     this.angleArr = [0, -180]
-    this.angle = (180 - 45) * random() * (Math.PI / 180);
+    this.angle = (180 - 45) * Math.random(1) * (Math.PI / 180);
     this.origSpeed = 2
     this.speed = this.origSpeed
     this.color = color(150, 200, 0, 200)

@@ -6,8 +6,8 @@ let w = 20
 let speed = 6
 let speedCounter = 0
 
-let bouncersNr = 3
-let eatersNr = 3
+let bouncersNr = 1
+let eatersNr = 1
 let lineStepperNr =  0
 
 let bouncers = []
@@ -27,7 +27,12 @@ let lines = []
 let allLines = []
 let frame = 0
 let percent = 0
-let winPercent = 75
+let winPercent = 80
+let checkPercent = true
+let compPercent
+let levelNr = 0
+let levelName
+let gameActive = true
 
 
 function setup(){
@@ -48,16 +53,8 @@ function setup(){
     allSquares = (rows-2)*(cols-2)
     pacman = new Pac()
 
-    for (let i = 0; i<bouncersNr; i++){
-        bouncers.push(new Bouncer(i))
-    }
-    monsters.push(bouncers)
+    loadLevel(levelNr)
 
-    for (let i = 0; i<eatersNr; i++){
-        eaters.push(new Eater(i+(bouncersNr)))
-    }
-
-    monsters.push(eaters)
 }
 
 
@@ -80,13 +77,16 @@ function draw(){
     })
     pacman.show()
 
+
     for (let i = 0; i<monsters.length; i++){
         for (let j = 0; j<monsters[i].length; j++){
             currentMonster = monsters[i][j]
             currentMonster.show()
             currentMonster.collideWithRoute()
             currentMonster.collideWithBorder()
-            currentMonster.walk()
+            if (gameActive) {
+                currentMonster.walk()
+            }
             currentMonster.collideWithPacman()
 
         }
@@ -96,6 +96,7 @@ function draw(){
         for (let j = 0; j<monsters[i].length; j++){
             currentMonster = monsters[i][j]
             currentMonster.collideWithMonster()
+
         }
     }
 
@@ -106,16 +107,33 @@ function draw(){
         }
     }
 
-    pacman.move()
-    pacman.moveAni()
+    if (gameActive) {
+        pacman.move()
+        pacman.moveAni()
+    }
+
     pacman.take()
 
+    if(checkPercent) {
+        compPercent = calcPercent()
+    }
 
-    let compPercent = calcPercent()
+    text(levelName, 300,15) 
 
-    if (percent >= winPercent) {
-        text("CONGRATULATIONS! WELL DONE.", 10,40) 
+    if (levelNr === levelSpec.length) {
+        text("CONGRATULATIONS!! GAME OVER", 10,40) 
+        gameActive = false
+        percent = 0
+    } else if (percent >= winPercent) {
+        gameActive = false
+        text("GOOD JOB! PRESS SPACE TO CONTINUE", 10,40) 
         text(100 +" %", 365,15)
+        checkPercent = false
+        if (keyCode === 32  && levelNr < levelSpec.length-1) {
+            levelNr++
+            loadLevel(levelNr)
+        }
+
 
     } else if (compPercent <= 100){
         text(compPercent +" %", 365,15)
@@ -283,3 +301,56 @@ function Make2DArray(rows, cols) {
 
     return arr
 }
+
+
+function loadLevel(levelNumber) {
+    gameActive = true
+    percent = 0
+    checkPercent = true
+    monsters.length = 0
+    bouncers.length = 0
+    eaters.length = 0
+    pacman.x = 0 * w + w / 2
+    pacman.y = w/2
+    pacman.aniX = 0 * w + w / 2
+    pacman.aniY = w/2
+    pacman.direction = ""
+
+
+    for (let i = 0; i<grid.length; i++){
+        for (let j = 0; j<grid[i].length; j++){
+            grid[i][j].tail = false
+            grid[i][j].on = false
+            grid[i][j].activeLines = []
+        }
+    }
+
+
+
+    startSquare()
+    initLineChecks()
+
+
+    const level = levelSpec[levelNumber]
+
+    levelName = level.levelName
+
+    for (let i = 0; i<level.bouncers; i++){
+        bouncers.push(new Bouncer(i))
+    }
+    monsters.push(bouncers)
+
+    for (let i = 0; i<level.eaters; i++){
+        eaters.push(new Eater(i+(level.bouncers)))
+    }
+
+    monsters.push(eaters)
+
+}
+
+
+function loadJSON(url) {
+        return fetch(url)
+        .then(r => r.json())
+}
+

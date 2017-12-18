@@ -1,7 +1,6 @@
 function Eater(id){
-
   this.id = id
-  this.location = new p5.Vector(82, 50*(id+1)+50)
+  this.location = new p5.Vector(82, 50*(id+1))
   this.r = 9.5
   this.mass = 50
   this.angle = (180-45)*random() * (Math.PI / 180);
