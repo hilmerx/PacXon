@@ -112,7 +112,6 @@ Pac.prototype.take = function(){
                 initLineChecks()
                 pacman.flying = false;
                 if (!this.keyIsPressed){
-                    console.log("hej");
                     pacman.direction=""
                 }
             }

@@ -26,6 +26,9 @@ let pacman;
 let lines = []
 let allLines = []
 let frame = 0
+let percent = 0
+let winPercent = 75
+
 
 function setup(){
     createCanvas((rows*w)+1,(cols*w)+1)
@@ -108,9 +111,15 @@ function draw(){
     pacman.take()
 
 
-    text(calcPercent(), 384,15)
+    let compPercent = calcPercent()
 
-    if(winPercent>=70){ text("CONGRATULATIONS! WELL DONE.", 10,40) }
+    if (percent >= winPercent) {
+        text("CONGRATULATIONS! WELL DONE.", 10,40) 
+        text(100 +" %", 365,15)
+
+    } else if (compPercent <= 100){
+        text(compPercent +" %", 365,15)
+    } 
 }
 
 
@@ -149,7 +158,9 @@ function calcPercent(){
             }
         }
     }
-    return winPercent = parseInt(onSquares / allSquares*100)
+    percent = (onSquares / allSquares)*100
+
+    return parseInt((percent/winPercent)*100)
 }
 
 function initLineChecks() {
